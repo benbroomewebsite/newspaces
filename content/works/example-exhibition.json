@@ -1,0 +1,17 @@
+{
+  "title": "Example Exhibition",
+  "indexTitle": "Example Exhibition",
+  "category": "Exhibition",
+  "type": "Exhibition",
+  "publication": "Community Hall, London",
+  "date": "2026-03",
+  "description": "A sample project showing how an exhibition page is laid out. Replace or delete it in the editor at /keystatic.\n\nThe images below follow the same row rules as before: landscapes alternate between full width and pairs, portraits pair up, and the order is shuffled on each visit unless Saved order is chosen.",
+  "links": [],
+  "files": [],
+  "imageOrder": "random",
+  "images": [
+    { "upload": "/uploads/works/example-exhibition/images/0/upload.png", "alt": "Textile hanging in a community hall", "layout": "auto" },
+    { "upload": "/uploads/works/example-exhibition/images/1/upload.png", "alt": "Sculptures on the floor of an empty shopfront", "layout": "auto" },
+    { "upload": "/uploads/works/example-exhibition/images/2/upload.png", "alt": "Painting in a stairwell", "layout": "auto" }
+  ]
+}

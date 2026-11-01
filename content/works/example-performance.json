@@ -1,0 +1,16 @@
+{
+  "title": "Example Performance",
+  "indexTitle": "Example Performance",
+  "category": "Performance",
+  "type": "Performance",
+  "publication": "Railway Arch, London",
+  "date": "2025-09",
+  "description": "A sample performance project. Replace or delete it in the editor at /keystatic.",
+  "links": [],
+  "files": [],
+  "imageOrder": "random",
+  "images": [
+    { "upload": "/uploads/works/example-performance/images/0/upload.png", "alt": "Live music under a railway arch", "layout": "auto" },
+    { "upload": "/uploads/works/example-performance/images/1/upload.png", "alt": "Performance in an underground car park", "layout": "auto" }
+  ]
+}
