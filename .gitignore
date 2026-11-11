@@ -20,3 +20,8 @@ node_modules
 *.tsbuildinfo
 next-env.d.ts
 .playwright-mcp/
+
+# Media copied from Ben's portfolio by scripts/import-from-portfolio.mjs:
+# a local preview and the source for the New Spaces bucket, never committed.
+/public/work/
+/public/originals/

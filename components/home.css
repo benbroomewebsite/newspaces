@@ -1,0 +1,140 @@
+/*
+ * New Spaces front page, draft for review.
+ * From Ben's portfolio: MS Mincho at his body size, his ink and paper, the
+ *   underlined active filter, ↳ and · in the text, the hover preview.
+ * From the Triple Phase portfolio: the grey page, boxes behind the text, 1px
+ *   gaps, the name box and its notch, cards (meta, title, image, foot), rule
+ *   bands and bold titles at a larger size.
+ */
+html:has(.ns-home), body:has(.ns-home) { height: auto; overflow: visible; }
+body:has(.ns-home) { background: #b9b9b7; }
+
+.ns {
+  --ns-page: #b9b9b7;            /* Triple Phase grey, for now */
+  --ns-box: var(--paper);        /* Ben's paper, behind text and on the cards */
+  --ns-ink: var(--ink);
+  --ns-quiet: #66665f;           /* filters not chosen, on the paper */
+  --ns-rule: rgb(17 17 17 / .5);
+  --ns-shade: #d9d9d5;           /* an image still loading */
+  --ns-margin: var(--edge);
+  --ns-notch: 14px;
+  --ns-indent: 12px;
+  --ns-row-gap: 48px;
+  --ns-s: 13px;
+  --ns-m: clamp(20px, 1.6vw, 28px);
+  min-height: 100dvh;
+  padding-bottom: 88px;
+  background: var(--ns-page);
+  color: var(--ns-ink);
+}
+.ns button { padding: 0; background: transparent; text-align: left; }
+
+/* The one box at the top: name, notch, then the filters and About/Contact. */
+.ns-head { position: sticky; top: 0; z-index: 20; display: flex; margin: 0 var(--ns-margin); font-size: clamp(15px, 1.15vw, 18px); font-weight: 700; line-height: 1.2; }
+.ns-head > * { padding: 8px var(--ns-indent) 7px; background: var(--ns-box); }
+/* The name box is as wide as the first programme below it. */
+.ns-head-name { position: relative; flex: 0 0 calc((100% - (var(--ns-count) - 1) * 1px) / var(--ns-count)); }
+.ns-head-name::after { content: ''; position: absolute; top: 0; right: calc(-1 * var(--ns-notch) - 1px); width: calc(var(--ns-notch) + 2px); height: 30%; background: var(--ns-box); }
+.ns-head-filters { display: flex; flex: 1; flex-wrap: wrap; gap: 0 1.1em; margin-left: var(--ns-notch); }
+.ns-head-filters button { color: var(--ns-quiet); }
+.ns-head-filters button[aria-pressed="true"] { color: var(--ns-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.ns-head-links { white-space: nowrap; }
+
+/* Shared card: small meta line, bold title, the image edge to edge, a small foot. */
+.ns-card { display: flex; flex-direction: column; min-width: 0; background: var(--ns-box); }
+.ns-card > span { display: block; }
+.ns-card > .ns-card-meta { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-indent); padding: 5px var(--ns-indent) 0; font-size: var(--ns-s); line-height: 1.25; }
+.ns-card-title { padding: 1px var(--ns-indent) 7px; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; text-wrap: balance; }
+.ns-card-media { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--ns-shade); }
+.ns-card-media img, .ns-preview img, .ns-list-cover img { object-fit: cover; }
+.ns-card-foot { padding: 5px var(--ns-indent) 7px; font-size: var(--ns-s); line-height: 1.3; }
+
+/* Boxes: the programmes fill the first screen, tall images side by side. */
+.ns-programmes { display: grid; grid-template-columns: repeat(var(--ns-count), minmax(0, 1fr)); column-gap: 1px; align-items: start; margin: 1px var(--ns-margin) 0; }
+.ns-card-programme .ns-card-media { aspect-ratio: 2 / 3; max-height: max(320px, calc(100svh - var(--ns-head-h, 40px) - 9.5rem)); }
+.ns-work { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; row-gap: var(--ns-row-gap); align-items: start; margin: 10px var(--ns-margin) 0; }
+
+/* A chosen programme, as one bold paragraph. */
+.ns-intro { margin: 1px var(--ns-margin) 0; padding: 6px var(--ns-indent) 9px; background: var(--ns-box); font-size: var(--ns-m); line-height: 1.12; text-wrap: pretty; }
+
+/* Rule bands: small labels between two rules, on three columns. */
+.ns-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin: var(--ns-row-gap) var(--ns-margin) 0; padding: 4px 0 3px; border-block: 1px solid var(--ns-rule); scroll-margin-top: calc(var(--ns-head-h, 40px) + 12px); }
+.ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: span 2; }
+.ns-band h2 { margin: 0; font: inherit; font-size: var(--ns-s); font-weight: 700; line-height: 1.25; }
+
+/* List: rows divided by rules on the paper; the preview fills the other half. */
+.ns-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 1px; align-items: start; margin: 1px var(--ns-margin) 0; }
+.ns-list-rows { min-height: calc(100svh - var(--ns-head-h, 40px) - 1px); padding-bottom: 24px; background: var(--ns-box); }
+.ns-list-rows .ns-intro { margin: 0; }
+.ns-list-group ul { margin: 0; padding: 0; list-style: none; }
+.ns-list-heading { display: grid; grid-template-columns: minmax(0, 1fr) 6.5em 6.5em; column-gap: var(--ns-indent); align-items: baseline; margin: 0; padding: 26px var(--ns-indent) 6px; font: inherit; font-size: var(--ns-s); }
+.ns-list-group:first-child .ns-list-heading { padding-top: 8px; }
+.ns-list-heading button { justify-self: start; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; }
+.ns-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 5.5em; column-gap: var(--ns-indent); padding: 5px var(--ns-indent) 4px; border-top: 1px solid var(--ns-rule); }
+.ns-list-group li:last-child .ns-row { border-bottom: 1px solid var(--ns-rule); }
+.ns-row > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ns-row[data-active] { background: var(--ns-ink); color: var(--ns-box); }
+.ns-list-cover { display: none; }
+
+.ns-preview { position: sticky; top: calc(var(--ns-head-h, 40px) + 1px); display: flex; flex-direction: column; height: calc(100svh - var(--ns-head-h, 40px) - 1px - var(--ns-switch-h, 0px)); min-height: 0; }
+.ns-preview-work, .ns-preview-idle { flex: 1; min-height: 0; animation: ns-fade 260ms ease both; }
+.ns-preview-work { display: flex; flex-direction: column; }
+.ns-preview-images { display: grid; flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 1px; }
+.ns-preview-images.has-strip { grid-template-rows: minmax(0, 3fr) minmax(0, 1fr); }
+.ns-preview-images > span, .ns-preview-idle figure { position: relative; min-height: 0; margin: 0; overflow: hidden; background: var(--ns-shade); }
+.ns-preview-images > :first-child { grid-column: 1 / -1; }
+.ns-preview-text { margin-top: 1px; padding: 6px var(--ns-indent) 10px; background: var(--ns-box); }
+.ns-preview-text h2 { margin: 0; font: inherit; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; }
+.ns-preview-text p { margin: 5px 0 0; }
+.ns-preview-text h2 + p { font-size: var(--ns-s); }
+.ns-preview-excerpt { max-width: 40em; }
+.ns-preview-idle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 1px; }
+.ns-preview-idle-1 { grid-template-columns: minmax(0, 1fr); }
+.ns-preview-idle figcaption { position: absolute; bottom: 0; left: 0; padding: 4px var(--ns-indent) 3px; background: var(--ns-box); font-weight: 700; }
+@keyframes ns-fade { from { opacity: 0; } }
+
+/* About, Mission, Trustees, Contact. */
+.ns-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin: 0 var(--ns-margin); padding-top: 10px; }
+.ns-cols p { max-width: 36em; margin: 0 0 12px; }
+.ns-flow { margin: 10px var(--ns-margin) 0; font-size: var(--ns-m); font-weight: 700; line-height: 1.2; }
+
+/* Review only: switches the layout on trial. The preview stops above it. */
+.ns-home { --ns-switch-h: 54px; }
+.ns-switch { position: fixed; bottom: 14px; left: 50%; z-index: 30; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px; background: var(--ns-ink); color: var(--ns-box); font-size: var(--ns-s); line-height: 1; transform: translateX(-50%); }
+.ns-switch span { padding: 0 6px 0 9px; }
+.ns .ns-switch button { padding: 5px 11px 4px; border-radius: 999px; color: inherit; }
+.ns .ns-switch button[aria-pressed="true"] { background: var(--ns-box); color: var(--ns-ink); }
+
+@media (hover: hover) {
+  .ns-head-filters button:hover { color: var(--ns-ink); }
+  .ns-head-links a:hover, .ns-flow a:hover, .ns-list-heading button:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .ns-card:hover .ns-card-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .1em; }
+  .ns-row:hover { background: var(--ns-ink); color: var(--ns-box); }
+}
+@media (max-width: 1024px) {
+  .ns-programmes, .ns-work { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ns-programmes { row-gap: 1px; }
+  .ns-head-name { flex-basis: auto; }
+  .ns-card-programme .ns-card-media { aspect-ratio: 4 / 5; max-height: none; }
+  .ns-list { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+}
+@media (max-width: 800px) {
+  .ns { --ns-m: 20px; --ns-row-gap: 32px; }
+  .ns-head { flex-wrap: wrap; }
+  .ns-head-name { flex: 1 1 auto; }
+  .ns-head-links { margin-left: var(--ns-notch); }
+  .ns-head-filters { flex-basis: 100%; order: 3; margin: 1px 0 0; }
+  .ns-list { display: block; }
+  .ns-preview { display: none; }
+  .ns-list-cover { position: relative; display: block; aspect-ratio: 3 / 2; }
+  .ns-list-heading { grid-template-columns: minmax(0, 1fr) auto; }
+  .ns-list-heading > span:last-child, .ns-row > span:nth-child(2) { display: none; }
+  .ns-row { grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (max-width: 640px) {
+  .ns-programmes, .ns-work, .ns-cols { grid-template-columns: minmax(0, 1fr); }
+  .ns-cols > :nth-child(2) { grid-column: auto; }
+  .ns-work { row-gap: 24px; }
+  .ns-band { display: flex; justify-content: space-between; gap: var(--ns-indent); }
+}
+@media (prefers-reduced-motion: reduce) { .ns-preview-work, .ns-preview-idle { animation: none; } }

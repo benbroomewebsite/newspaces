@@ -7,6 +7,9 @@ import type { ImageLayout } from './gallery-layout'
 
 export type WorkCategory = 'Exhibition' | 'Selected Writing' | 'Performance' | 'Talk' | 'Artist Grant' | 'Press'
 
+// The New Spaces programme a project belongs to; lib/programmes.ts describes each.
+export type ProgrammeName = 'Artist Membership' | 'Artist Grant' | 'Rooms of Neighbours' | 'Performance By'
+
 export type WorkImage = {
   src: string
   alt: string
@@ -48,6 +51,7 @@ export type Work = {
   featuredImage: string
   order: number
   category: WorkCategory
+  programme?: ProgrammeName
   alsoInWriting: boolean
   hiddenFromAll: boolean
 }
@@ -59,6 +63,7 @@ type ContentWork = {
   title: string
   indexTitle?: string
   category: string
+  programme?: string
   alsoInWriting?: boolean
   hiddenFromAll?: boolean
   type?: string
@@ -119,6 +124,7 @@ function normalize(work: ContentWork): Work {
     featuredImage: work.featuredImage ?? '',
     order: work.order ?? 0,
     category: work.category as WorkCategory,
+    programme: (work.programme || undefined) as ProgrammeName | undefined,
     alsoInWriting: Boolean(work.alsoInWriting) && work.category !== 'Selected Writing',
     hiddenFromAll: Boolean(work.hiddenFromAll),
   }

@@ -38,6 +38,12 @@ export default config({
           options: ['Exhibition', 'Selected Writing', 'Performance', 'Talk', 'Artist Grant', 'Press'].map((value) => ({ label: value, value })),
           defaultValue: 'Exhibition',
         }),
+        programme: fields.select({
+          label: 'Programme',
+          description: 'Which New Spaces programme the project belongs to. Projects without one stay off the front page.',
+          options: [{ label: 'None', value: '' }, ...['Artist Membership', 'Artist Grant', 'Rooms of Neighbours', 'Performance By'].map((value) => ({ label: value, value }))],
+          defaultValue: '',
+        }),
         alsoInWriting: fields.checkbox({
           label: 'Also list under Selected Writing',
           description: 'For an exhibition whose text you wrote. It appears once under All and also under Selected Writing.',

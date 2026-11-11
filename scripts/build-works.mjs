@@ -16,6 +16,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const media = JSON.parse(readFileSync(join(root, 'lib/media-map.json'), 'utf8'))
 const DATE = /^\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?)?$/
 const categories = new Set(['Exhibition', 'Selected Writing', 'Performance', 'Talk', 'Artist Grant', 'Press'])
+// Keep in step with lib/programmes.ts.
+const programmes = new Set(['Artist Membership', 'Artist Grant', 'Rooms of Neighbours', 'Performance By'])
 const validDate = (value) => {
   if (typeof value !== 'string' || !DATE.test(value)) return false
   if (value.length !== 10) return true
@@ -74,6 +76,10 @@ function collect(name) {
   if (work.category !== 'Press' && !validDate(work.date)) {
     warn(slug, `left off the site until it has a date (2025, 2025-10 or 2025-10-04), found "${work.date ?? ''}"`)
     return undefined
+  }
+  if (work.programme && !programmes.has(work.programme)) {
+    warn(slug, `unknown programme "${work.programme}", left out of the programmes`)
+    delete work.programme
   }
   return {
     ...work,

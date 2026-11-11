@@ -12,7 +12,8 @@ Use only two sources: Ben's site for structure, project pages and font, and
 Daniel's portfolio for its boldness and visual system. Cut everything else.
 
 - Keep everything on one page. Clicking a project opens its page, as on Ben's site.
-- Drop the list index. The front of the site is a few large images.
+- Replace Ben's list index. The front of the site leads with large images.
+  Two layouts are on trial (see "The page").
 - Keep the top minimal: one box holding New Spaces, the filters, About and
   Contact. Drop the description and contact boxes beneath it.
 - Put About, the mission statement, trustees and contact further down the same page.
@@ -57,8 +58,19 @@ Files here to rework: `components/portfolio.tsx`, `components/project.tsx`, `app
   Contact in the header jump to them.
 - **On phones** the header stays on one line, the filters wrap beneath it and the cards form one column.
 
-Before finishing the grid, mock up two arrangements with real images: one row
-of 4–5 cards and the three-column grid. Choose between them with Ben.
+**Two layouts on trial** at `/`, switched with the pill at the foot of the
+screen or `?layout=boxes` / `?layout=list`:
+
+- **Boxes:** the programmes fill the first screen as tall image cards. Every
+  project follows as a card in three columns.
+- **List:** programmes are headings over rows divided by rules. Pointing at a
+  row fills a large panel beside the list with its images and text. The panel
+  sits beside the list rather than opening inside it, so the rows stay still
+  under the pointer. On phones each programme shows its photo above its rows.
+
+Both use the same header, filters and About/Trustees/Contact bands, set in
+Ben's font with Ben's paper for the boxes on the Triple Phase grey. Ben's
+original index stays at `/classic` for comparison. **Open:** Ben chooses.
 
 ## Content to carry across
 
@@ -98,16 +110,16 @@ presenting live music and performance art in underused public space".
 ## Content model
 
 - Keep Keystatic and the collector (`content/works/*.json` → `lib/generated/`).
-- `category` becomes the programme: Artist Membership, Artist Grant, Rooms of
-  Neighbours or Performance By, plus any fifth programme. Remove fields that
-  only Ben's archive used.
-- Add a `programmes` collection with one file each: title, cover image, short
-  text and order. It drives the front cards and the filters, so a fifth
-  programme can be added in the editor without code.
+- A `programme` field (in the editor) puts a project on the front page. Ben's
+  own categories stay, so the project pages behave as on his site. Once a
+  layout is chosen, remove the fields only his archive used.
+- The programmes are defined in `lib/programmes.ts` for now. Later, move them
+  into a Keystatic collection (title, cover, text, order), so a fifth can be
+  added in the editor without code.
 - Add Mission and Trustees (name and role) to the `site` singleton. Email and Instagram stay there.
-- Add an import script that copies only the listed slugs from Ben's portfolio
-  into `content/works/` and maps their categories. It can be re-run if Ben
-  updates the originals.
+- `scripts/import-from-portfolio.mjs` copies the listed projects and their
+  media from Ben's checkout. Re-running it refreshes them from the portfolio
+  and overwrites any local edits to those files.
 
 ## Media (R2 on Ben's account)
 
@@ -118,10 +130,15 @@ Artist Grant files on a separate `r2.dev` bucket.
 1. Run `wrangler logout`, then `wrangler login` with Ben's Cloudflare login (he
    approves it in the browser). Confirm `wrangler whoami` shows his account before going further.
 2. Create one bucket for New Spaces. **Open:** the bucket name.
-3. Write a migration script. It downloads each file from its current public URL
-   and uploads it with `wrangler r2 object put --remote` and the correct content
-   type, keyed by its site path (`work/<slug>/001.jpg`). With path keys New
-   Spaces needs no media map, because `mediaHref` only adds the base URL.
+3. Upload from the local copies. Ben's checkout keeps a gitignored mirror of
+   his bucket (`r2-bucket/`), and the importer has already copied the 322 files
+   found there into `public/work` and `public/originals` (gitignored). Upload
+   each with `wrangler r2 object put --remote` and the correct content type,
+   keyed by its site path (`work/<slug>/001.jpg`). With path keys New Spaces
+   needs no media map, because `mediaHref` only adds the base URL. Many
+   originals are 2400–2500px and several MB, so make web-sized copies first.
+   The other 12 grant files are on the separate `r2.dev` bucket. Resized
+   copies are in `Documents/artistgrant/artistgrant-media-prepared`.
 4. Use the bucket's `r2.dev` address during review. It is rate-limited and not
    for launch. Switch to a custom domain once the New Spaces domain is on Cloudflare.
 5. Check images, videos and the PDF (including range requests) through the
@@ -145,28 +162,31 @@ licence (SIL OFL). **Open.**
 
 ## Build order
 
-0. Commit the current foundation cleanup, which is still uncommitted, so the
-   redesign starts from a clean diff. Read the relevant Next.js 16 guides in
-   `node_modules/next/dist/docs/` before changing routes or metadata.
-1. Strip Ben's index: the list, hover preview, slideshow, font trial, alignment
-   code and unused categories. Update the checks to match.
-2. Port the Triple Phase visual system into a scoped stylesheet: tokens, header
-   box, pills, cards and rule bands. Set it in Ben's font.
-3. Change the content model (programmes, categories, site fields) and import the selected entries.
-4. Set up the R2 bucket and migrate the media. This needs Ben's login.
-5. Build the index: header, filters, programme cards, programme grids, and the
-   About/Trustees/Contact bands. Mock up both grid arrangements and decide with Ben.
-6. Restyle the project pages to match, keeping their layout and readers.
-7. Run `pnpm test`, `pnpm typecheck` and `pnpm build`. In a browser at desktop
+Done on the `site-redesign` branch (11 November 2026):
+
+- Committed the foundation cleanup as a checkpoint.
+- Imported the 16 projects and their media (`node scripts/import-from-portfolio.mjs`).
+- Built the front page (`components/home.tsx`, `home.css`) with both layouts,
+  and moved Ben's index to `/classic`.
+
+Next:
+
+1. Ben chooses Boxes or List. Remove the other layout, the switch, `/classic`
+   and Ben's list index code (slideshow, font trial, alignment code). Update the checks to match.
+2. Restyle the project pages to match the front page, keeping their layout and readers.
+3. Move the programmes into the editor. Add Mission and Trustees.
+4. Set up the R2 bucket and upload the media. This needs Ben's login.
+5. Run `pnpm test`, `pnpm typecheck` and `pnpm build`. In a browser at desktop
    and 390px, check the filters, back navigation, keyboard focus and that the page has no horizontal scroll.
-8. At launch: the domain, `NEXT_PUBLIC_SITE_URL`, the indexable flag, a
+6. At launch: the domain, `NEXT_PUBLIC_SITE_URL`, the indexable flag, a
    Keystatic GitHub app for Ben, and hosting.
 
 ## Open questions for Ben
 
-1. Is there a fifth foundational programme, and what is it?
-2. Is the Performance By list above right?
-3. Logo, mission statement, trustees, contact email and Instagram.
-4. Text for Artist Membership and a Performance By introduction.
-5. Is the MS Mincho webfont licensed for New Spaces, or should the site use Shippori Mincho?
-6. Bucket name, domain and hosting.
+1. Boxes or List for the front page?
+2. Is there a fifth foundational programme, and what is it?
+3. Is the Performance By list above right?
+4. Logo, mission statement, trustees, contact email and Instagram.
+5. Text for Artist Membership and a Performance By introduction.
+6. Is the MS Mincho webfont licensed for New Spaces, or should the site use Shippori Mincho?
+7. Bucket name, domain and hosting.
