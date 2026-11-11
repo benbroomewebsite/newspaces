@@ -39,9 +39,9 @@ portfolio's `portfolio.css` and `portfolio-ui.tsx`.
 │ Membership  │ │ Grant       │ │ Neighbours  │ │ By          │
 │   image     │ │   image     │ │   image     │ │   image     │
 └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
-──── Artist Grant (4) ──────────────────────────────────────────
+──── Artist Grant ──────────────────────────────────────────────
   four cards, three to a row
-──── Performance By (10) ───────────────────────────────────────
+──── Performance By ────────────────────────────────────────────
   ten cards, three to a row
 ──── New Spaces ─── About ──────────────────────────────────────
 ──── Mission ────── Trustees ───────────────────────────────────

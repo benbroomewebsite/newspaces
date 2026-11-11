@@ -22,7 +22,6 @@ const placeholder = {
 }
 
 const venueOnly = (venue: string) => venue.replace(/,\s*[^,]+$/, '')
-const plural = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`
 const sections = programmes.filter((programme) => programme.works.length > 1)
 
 export function Home() {
@@ -36,7 +35,7 @@ export function Home() {
     </section>
 
     {sections.map((programme) => <section key={programme.id} id={programme.id} className="ns-section" aria-label={programme.name}>
-      <div className="ns-band"><h2>{programme.name}<sup>({programme.works.length})</sup></h2><h2>{programme.years}</h2></div>
+      <div className="ns-band"><h2>{programme.name}</h2><h2>{programme.years}</h2></div>
       <div className="ns-work">
         {programme.works.map((work) => <ProjectCard key={work.slug} work={work} />)}
       </div>
@@ -73,7 +72,7 @@ function Header() {
 function ProgrammeCard({ programme, eager }: { programme: Programme; eager: boolean }) {
   const venues = [...new Set(programme.works.map((work) => venueOnly(work.publication)))].join(', ')
   const card = <>
-    <span className="ns-card-meta"><span>{programme.years}</span><span>{plural(programme.works.length)}</span></span>
+    <span className="ns-card-meta"><span>{programme.years}</span></span>
     <h2 className="ns-card-title">{programme.name}</h2>
     <span className="ns-card-media ns-card-media-tall">
       {programme.cover && <Image src={mediaHref(programme.cover)} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" loading={eager ? 'eager' : 'lazy'} />}
