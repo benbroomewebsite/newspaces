@@ -41,7 +41,8 @@ GitHub Actions runs the tests, type check and production build on pushes and PRs
 
 ## Project map
 
-- `app/(site)/`: index, About (`/bio` retained for compatibility), project pages.
+- `app/(site)/`: front page (rows at `/`, cards at `/cards` for comparison),
+  programme pages, About (`/bio` retained for compatibility), project pages.
 - `components/`: index, project galleries, image/PDF readers, editor image organiser.
 - `content/`: editable text and projects; `public/uploads/`: local media.
 - `lib/`: content normalisation, gallery rules, media resolution and site metadata.

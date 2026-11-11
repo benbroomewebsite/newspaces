@@ -21,13 +21,21 @@ export type Programme = {
   /** "2025", or "2021–2024". */
   years: string
   cover?: string
-  /** A programme of a single project opens that project rather than a filter. */
-  href?: string
+  /** A programme of a single project opens that project; one of several has its own page. */
+  href: string
 }
 
 export const coverOf = (work: Work) => work.featuredImage || work.images[0]?.src
 
 const firstSentence = (text: string) => text.match(/^[^\n]+?[.!?](?=\s|$)/)?.[0] ?? ''
+
+// The opening of a project's text. A heading line such as "The Judging Panel:"
+// is joined to the paragraph it introduces.
+export function excerpt(description: string, limit = 320) {
+  const [first = '', second] = description.split(/\n\n+/).map((paragraph) => paragraph.replace(/\s+/g, ' ').trim()).filter(Boolean)
+  const text = first.length < 40 && second ? `${first.replace(/[:;]?$/, ':')} ${second}` : first
+  return text.length > limit ? `${text.slice(0, limit).replace(/\s+\S*$/, '')}…` : text
+}
 
 export const programmes: Programme[] = definitions.map(({ name, id, text }) => {
   const members = works.filter((work) => work.programme === name)
@@ -41,9 +49,8 @@ export const programmes: Programme[] = definitions.map(({ name, id, text }) => {
     years: years.length > 1 ? `${years[0]}–${years.at(-1)}` : String(years[0] ?? ''),
     // Works arrive newest first, so the cover comes from the latest project.
     cover: members.map(coverOf).find(Boolean),
-    href: single ? `/work/${single.slug}` : undefined,
+    href: single ? `/work/${single.slug}` : `/programmes/${id}`,
   }
 }).filter((programme) => programme.works.length > 0)
 
-export const programmeWorks = works.filter((work) => work.programme)
 export const programmeById = (id: string | null) => programmes.find((programme) => programme.id === id)

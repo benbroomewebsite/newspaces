@@ -8,54 +8,63 @@ the meeting prompts in `next-steps.md`; its R2 checklist still applies.
 
 ## Direction
 
-The front page follows Daniel's Triple Phase portfolio (triple-phase.com/portfolio)
-as closely as possible, set in Ben's font. Project pages stay as on Ben's site.
+The front page uses the boxes and type of Daniel's Triple Phase portfolio
+(triple-phase.com/portfolio) on Ben's grey, set in Ben's font. Keep it simple.
+Project pages stay as on Ben's site.
 
-- Keep everything on one page. Clicking a project opens its page, as on Ben's site.
-- Lead with large images. There is no list and no filter bar (both were tried and dropped).
 - Use the portfolio's top: the name box and its notch, About and Contact, and
   a description box and contact box beneath. The text is placeholder until
   New Spaces supplies its own.
-- Put About, the mission statement, trustees and contact further down the same page.
-- Use the portfolio's grey background for now. It can change later.
+- Show each programme as a thin white box across the page that opens into a preview.
+- Keep the description (About) and Contact at the foot of the page, in rule
+  bands. No mission statement. Trustees get a separate page later.
+- No category lines, no project counts, no list and no filter bar (all tried and dropped).
+- Use Ben's grey (`#eeeeeb`, his `--paper`) for the page.
+- Set the text a little larger than on the portfolio, with the body text
+  nearer the title size (16px and 20px at desktop width).
 
 ## What comes from each site
 
 | From | Keep | Drop |
 |---|---|---|
-| Triple Phase portfolio | Its measurements and colours: grey page, white boxes, 1px gaps, the header box with its notch and the boxes beneath, image cards (meta, title, image, tags), rule bands, flowing contact text and pills, the three type sizes | Neue Haas, the filter pills, the local clock, paper/clip/live-site media |
-| Ben's portfolio (this repo) | MS Mincho with its arrow and quote fixes, project pages (text column + gallery), image and PDF readers, Keystatic editor, content collector and checks, noindex drafts | List index, hover preview and slideshow (removed), Selected Writing/Press/Talk categories and writing-only fields |
+| Triple Phase portfolio | White boxes, 1px gaps, the header box with its notch and the boxes beneath, image cards, rule bands, flowing contact text and pills, the type sizes (enlarged) | Its grey, Neue Haas, the filter pills, the local clock, paper/clip/live-site media |
+| Ben's portfolio (this repo) | His grey, MS Mincho with its arrow and quote fixes, project pages (text column + gallery), image and PDF readers, Keystatic editor, content collector and checks, noindex drafts | List index, hover preview and slideshow (removed), Selected Writing/Press/Talk categories and writing-only fields |
 
-The front page is `components/home.tsx` and `home.css`, ported from the
-portfolio's `portfolio.css` and `portfolio-ui.tsx`.
+The front page is `components/home.tsx`, `programme-row.tsx` and `home.css`,
+ported from the portfolio's `portfolio.css` and `portfolio-ui.tsx`.
 
 ## The page
 
 ```
 ┌ New Spaces ┐┌ About, Contact ─────────────────────────────────────────┐
 ├ description ───────┤ ├ tagline, Instagram │ Contact ┤
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│ Artist      │ │ Artist      │ │ Rooms of    │ │ Performance │
-│ Membership  │ │ Grant       │ │ Neighbours  │ │ By          │
-│   image     │ │   image     │ │   image     │ │   image     │
-└─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
-──── Artist Grant ──────────────────────────────────────────────
-  four cards, three to a row
-──── Performance By ────────────────────────────────────────────
-  ten cards, three to a row
+
+┌ Artist Membership ── a line about it ─────────────────────────── + ┐
+┌ Artist Grant ─────── a line about it ─────────────────────────── + ┐
+┌ Rooms of Neighbours ─ a line about it ────────────────────────── − ┐
+│ text             │ image │ image │ image │ image →                 │
+│ ↳ Go to …        │       │       │       │                         │
+└────────────────────────────────────────────────────────────────────┘
+┌ Performance By ───── a line about it ─────────────────────────── + ┐
+
 ──── New Spaces ─── About ──────────────────────────────────────
-──── Mission ────── Trustees ───────────────────────────────────
 ──── Contact ───────────────────────────────────────────────────
 ```
 
-- **The programmes** fill the first screen as four tall cards. Artist
-  Membership and Rooms of Neighbours are single projects, so their cards open
-  the project. Artist Grant and Performance By jump to their own section.
-- **Each programme with several projects** gets a band and its projects as
-  cards, three to a row.
-- **About, Mission, Trustees and Contact** follow as rule bands. About and
-  Contact in the header jump to them.
-- **On phones** everything forms one column, as on the portfolio.
+- **A programme row** shows its name and a line of text. The first press
+  opens the preview: the text on the left with "↳ Go to …", and the images to
+  the right, scrolling sideways where there are more. Pressing the name again,
+  or the link, goes to its page. Open rows stay open on return from a project.
+- **Artist Membership and Rooms of Neighbours** are single projects. Their
+  preview shows the project's images and their page is the project.
+- **Artist Grant and Performance By** have several projects. Their preview
+  shows one image per project, each linking to it, and their page
+  (`/programmes/artist-grant`, `/programmes/performance-by`) shows the
+  projects as cards, three to a row.
+- **The card version** (four tall image cards across the first screen) stays
+  at `/cards` for comparison. **Open:** Ben chooses, since the rows reveal fewer images at first.
+- **On phones** everything forms one column. The row text wraps under the
+  name, and the images scroll sideways.
 - **Font:** Ben's MS Mincho. Ben's existing `?font=arial` trial shows the same
   page in a sans-serif, which is much closer to the portfolio's Neue Haas.
   **Open:** which to keep.
@@ -89,7 +98,7 @@ Left out: the ten 2022 performances at Gladstone Gallery and Alice Visentin at
 the Italian Cultural Institute, because they were indoors. None of the
 performances has text, so their pages are images only.
 
-**From Ben:** the logo, mission statement, trustees, contact email and Instagram,
+**From Ben:** the logo, description, trustees, contact email and Instagram,
 text for Artist Membership, a Performance By introduction, image credits, and
 any charity wording he wants public. Use only wording he supplies. A draft
 Performance By introduction could start from his own bio: "an iterative series
@@ -104,7 +113,7 @@ presenting live music and performance art in underused public space".
 - The programmes are defined in `lib/programmes.ts` for now. Later, move them
   into a Keystatic collection (title, cover, text, order), so a fifth can be
   added in the editor without code.
-- Add Mission and Trustees (name and role) to the `site` singleton. Email and Instagram stay there.
+- Add the description to the `site` singleton beside email and Instagram. Trustees (name and role) get their own page.
 - `scripts/import-from-portfolio.mjs` copies the listed projects and their
   media from Ben's checkout. Re-running it refreshes them from the portfolio
   and overwrites any local edits to those files.
@@ -161,7 +170,7 @@ Next:
 
 1. Restyle the project pages to match the front page, keeping their layout and readers.
 2. Decide the font (MS Mincho or a sans-serif), then remove Ben's font trial.
-3. Move the programmes into the editor. Add Mission and Trustees.
+3. Move the programmes and their texts into the editor. Add the description and a trustees page.
 4. Set up the R2 bucket and upload the media. This needs Ben's login.
 5. Run `pnpm test`, `pnpm typecheck` and `pnpm build`. In a browser at desktop
    and 390px, check the programme links, back navigation, keyboard focus and that the page has no horizontal scroll.
@@ -174,7 +183,7 @@ Still waiting on 1–4 (as of 11 November 2026).
 
 1. Is there a fifth foundational programme, and what is it?
 2. Is the Performance By list above right?
-3. Logo, description, mission statement, trustees, contact email and Instagram.
+3. Logo, description, trustees, contact email and Instagram.
 4. Text for Artist Membership and a Performance By introduction.
 5. MS Mincho or a sans-serif? If MS Mincho, is the webfont licensed for New Spaces, or should the site use Shippori Mincho?
 6. Bucket name, domain and hosting.
