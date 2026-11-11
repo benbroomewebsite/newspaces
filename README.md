@@ -1,10 +1,9 @@
 # New Spaces
 
-An early website for New Spaces, adapted from Ben Broome's portfolio. The
-existing index, hover previews, galleries, document readers and Keystatic editor
-are retained. The two example projects and their images are layout samples;
-programme, wording, categories, identity and contact details await the meeting
-with Shelter Studio.
+An early website for New Spaces. The front page follows Daniel's Triple Phase
+portfolio; project pages, galleries, document readers and the Keystatic editor
+come from Ben Broome's portfolio. See `docs/build-plan.md` for the direction
+and what is still awaited. The two example projects are layout samples.
 
 ## Local development
 
@@ -13,6 +12,13 @@ Use Node.js 22 and the pnpm version pinned in `package.json`.
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
+```
+
+Project media is not in Git. With Ben's portfolio checkout (and its local
+bucket mirror) beside this one, copy the New Spaces projects and their media:
+
+```sh
+node scripts/import-from-portfolio.mjs
 ```
 
 Open the local URL printed by Next.js. `/keystatic` edits files locally without

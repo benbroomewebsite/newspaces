@@ -8,69 +8,57 @@ the meeting prompts in `next-steps.md`; its R2 checklist still applies.
 
 ## Direction
 
-Use only two sources: Ben's site for structure, project pages and font, and
-Daniel's portfolio for its boldness and visual system. Cut everything else.
+The front page follows Daniel's Triple Phase portfolio (triple-phase.com/portfolio)
+as closely as possible, set in Ben's font. Project pages stay as on Ben's site.
 
 - Keep everything on one page. Clicking a project opens its page, as on Ben's site.
-- Replace Ben's list index. The front of the site leads with large images.
-  Two layouts are on trial (see "The page").
-- Keep the top minimal: one box holding New Spaces, the filters, About and
-  Contact. Drop the description and contact boxes beneath it.
+- Lead with large images. There is no list and no filter bar (both were tried and dropped).
+- Use the portfolio's top: the name box and its notch, About and Contact, and
+  a description box and contact box beneath. The text is placeholder until
+  New Spaces supplies its own.
 - Put About, the mission statement, trustees and contact further down the same page.
-- Use a grey background for now, as on the Triple Phase portfolio. It can change later.
+- Use the portfolio's grey background for now. It can change later.
 
 ## What comes from each site
 
 | From | Keep | Drop |
 |---|---|---|
-| Triple Phase portfolio | Grey page, white boxes, 1px gaps; header box with its notch; rounded filter pills; image cards (meta, title, image, tags); rule bands for About/Contact; the three type sizes | Neue Haas; boxes under the header; the local clock; paper, clip and live-site media |
-| Ben's portfolio (this repo) | MS Mincho with its arrow and quote fixes; project pages (text column + gallery), image and PDF readers, Keystatic editor, content collector and checks, `/?filter=` links, noindex drafts | List index and hover preview, row snapping and filter alignment code, slideshow, font trial, Selected Writing/Press/Talk categories and writing-only fields |
+| Triple Phase portfolio | Its measurements and colours: grey page, white boxes, 1px gaps, the header box with its notch and the boxes beneath, image cards (meta, title, image, tags), rule bands, flowing contact text and pills, the three type sizes | Neue Haas, the filter pills, the local clock, paper/clip/live-site media |
+| Ben's portfolio (this repo) | MS Mincho with its arrow and quote fixes, project pages (text column + gallery), image and PDF readers, Keystatic editor, content collector and checks, noindex drafts | List index, hover preview and slideshow (removed), Selected Writing/Press/Talk categories and writing-only fields |
 
-Triple Phase files to port: `portfolio.css`, `portfolio-ui.tsx`, `portfolio-live.tsx`.
-Files here to rework: `components/portfolio.tsx`, `components/project.tsx`, `app/globals.css`.
+The front page is `components/home.tsx` and `home.css`, ported from the
+portfolio's `portfolio.css` and `portfolio-ui.tsx`.
 
 ## The page
 
 ```
-┌ New Spaces ┐┌ All  Artist Membership  Artist Grant  Rooms of Neighbours  Performance By   About, Contact ┐
-└────────────┘└────────────────────────────────────────────────────────────────────────────────────────────┘
+┌ New Spaces ┐┌ About, Contact ─────────────────────────────────────────┐
+├ description ───────┤ ├ tagline, Instagram │ Contact ┤
 ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
 │ Artist      │ │ Artist      │ │ Rooms of    │ │ Performance │
 │ Membership  │ │ Grant       │ │ Neighbours  │ │ By          │
-│             │ │             │ │             │ │             │
 │   image     │ │   image     │ │   image     │ │   image     │
-│             │ │             │ │             │ │             │
 └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
-──── About ─────────────────── Mission ─────────────────────────
-──── Trustees ──────────────────────────────────────────────────
+──── Artist Grant (4) ──────────────────────────────────────────
+  four cards, three to a row
+──── Performance By (10) ───────────────────────────────────────
+  ten cards, three to a row
+──── New Spaces ─── About ──────────────────────────────────────
+──── Mission ────── Trustees ───────────────────────────────────
 ──── Contact ───────────────────────────────────────────────────
 ```
 
-- **All** shows the foundational programmes as large cards. On desktop they
-  fill the screen below the header, and on phones they stack. The images carry the page.
-- **A filter** replaces those cards with that programme's projects in the Triple
-  Phase three-column grid. Performance By shows each performance, and Artist
-  Grant shows each year. Artist Membership and Rooms of Neighbours are single
-  projects, so their card opens the project page directly.
-- **Clicking a programme card** does the same as its filter, using `/?filter=…`,
-  which the index already supports.
+- **The programmes** fill the first screen as four tall cards. Artist
+  Membership and Rooms of Neighbours are single projects, so their cards open
+  the project. Artist Grant and Performance By jump to their own section.
+- **Each programme with several projects** gets a band and its projects as
+  cards, three to a row.
 - **About, Mission, Trustees and Contact** follow as rule bands. About and
   Contact in the header jump to them.
-- **On phones** the header stays on one line, the filters wrap beneath it and the cards form one column.
-
-**Two layouts on trial** at `/`, switched with the pill at the foot of the
-screen or `?layout=boxes` / `?layout=list`:
-
-- **Boxes:** the programmes fill the first screen as tall image cards. Every
-  project follows as a card in three columns.
-- **List:** programmes are headings over rows divided by rules. Pointing at a
-  row fills a large panel beside the list with its images and text. The panel
-  sits beside the list rather than opening inside it, so the rows stay still
-  under the pointer. On phones each programme shows its photo above its rows.
-
-Both use the same header, filters and About/Trustees/Contact bands, set in
-Ben's font with Ben's paper for the boxes on the Triple Phase grey. Ben's
-original index stays at `/classic` for comparison. **Open:** Ben chooses.
+- **On phones** everything forms one column, as on the portfolio.
+- **Font:** Ben's MS Mincho. Ben's existing `?font=arial` trial shows the same
+  page in a sans-serif, which is much closer to the portfolio's Neue Haas.
+  **Open:** which to keep.
 
 ## Content to carry across
 
@@ -131,14 +119,13 @@ Artist Grant files on a separate `r2.dev` bucket.
    approves it in the browser). Confirm `wrangler whoami` shows his account before going further.
 2. Create one bucket for New Spaces. **Open:** the bucket name.
 3. Upload from the local copies. Ben's checkout keeps a gitignored mirror of
-   his bucket (`r2-bucket/`), and the importer has already copied the 322 files
-   found there into `public/work` and `public/originals` (gitignored). Upload
+   his bucket (`r2-bucket/`), and the importer has already copied all 334
+   files into `public/work` and `public/originals` (gitignored): 322 from that
+   mirror and 12 grant files from `Documents/artistgrant/artistgrant-media-prepared`. Upload
    each with `wrangler r2 object put --remote` and the correct content type,
    keyed by its site path (`work/<slug>/001.jpg`). With path keys New Spaces
    needs no media map, because `mediaHref` only adds the base URL. Many
    originals are 2400–2500px and several MB, so make web-sized copies first.
-   The other 12 grant files are on the separate `r2.dev` bucket. Resized
-   copies are in `Documents/artistgrant/artistgrant-media-prepared`.
 4. Use the bucket's `r2.dev` address during review. It is rate-limited and not
    for launch. Switch to a custom domain once the New Spaces domain is on Cloudflare.
 5. Check images, videos and the PDF (including range requests) through the
@@ -166,27 +153,28 @@ Done on the `site-redesign` branch (11 November 2026):
 
 - Committed the foundation cleanup as a checkpoint.
 - Imported the 16 projects and their media (`node scripts/import-from-portfolio.mjs`).
-- Built the front page (`components/home.tsx`, `home.css`) with both layouts,
-  and moved Ben's index to `/classic`.
+- Built the front page (`components/home.tsx`, `home.css`) on the Triple
+  Phase portfolio. A list layout and a filter bar were tried and dropped.
+- Removed Ben's list index, hover preview and slideshow.
 
 Next:
 
-1. Ben chooses Boxes or List. Remove the other layout, the switch, `/classic`
-   and Ben's list index code (slideshow, font trial, alignment code). Update the checks to match.
-2. Restyle the project pages to match the front page, keeping their layout and readers.
+1. Restyle the project pages to match the front page, keeping their layout and readers.
+2. Decide the font (MS Mincho or a sans-serif), then remove Ben's font trial.
 3. Move the programmes into the editor. Add Mission and Trustees.
 4. Set up the R2 bucket and upload the media. This needs Ben's login.
 5. Run `pnpm test`, `pnpm typecheck` and `pnpm build`. In a browser at desktop
-   and 390px, check the filters, back navigation, keyboard focus and that the page has no horizontal scroll.
+   and 390px, check the programme links, back navigation, keyboard focus and that the page has no horizontal scroll.
 6. At launch: the domain, `NEXT_PUBLIC_SITE_URL`, the indexable flag, a
    Keystatic GitHub app for Ben, and hosting.
 
 ## Open questions for Ben
 
-1. Boxes or List for the front page?
-2. Is there a fifth foundational programme, and what is it?
-3. Is the Performance By list above right?
-4. Logo, mission statement, trustees, contact email and Instagram.
-5. Text for Artist Membership and a Performance By introduction.
-6. Is the MS Mincho webfont licensed for New Spaces, or should the site use Shippori Mincho?
-7. Bucket name, domain and hosting.
+Still waiting on 1–4 (as of 11 November 2026).
+
+1. Is there a fifth foundational programme, and what is it?
+2. Is the Performance By list above right?
+3. Logo, description, mission statement, trustees, contact email and Instagram.
+4. Text for Artist Membership and a Performance By introduction.
+5. MS Mincho or a sans-serif? If MS Mincho, is the webfont licensed for New Spaces, or should the site use Shippori Mincho?
+6. Bucket name, domain and hosting.

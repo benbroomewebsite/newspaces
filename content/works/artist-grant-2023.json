@@ -92,11 +92,11 @@
     }
   ],
   "files": [],
-  "featuredImage": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/morgan-still-6c097205.png",
+  "featuredImage": "/work/artist-grant-2023/morgan-still-6c097205fdf9.png",
   "imageOrder": "random",
   "images": [
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/morgan-still-6c097205.png",
+      "src": "/work/artist-grant-2023/morgan-still-6c097205fdf9.png",
       "alt": "Morgan Quaintance",
       "group": "Morgan Quaintance",
       "layout": "auto",
@@ -104,7 +104,7 @@
       "height": 1563
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/ceidra-b3bfdcbc.jpg",
+      "src": "/work/artist-grant-2023/ceidra-b3bfdcbcd984.jpg",
       "alt": "Ceidra Moon Murphy",
       "group": "Ceidra Moon Murphy",
       "layout": "auto",
@@ -112,7 +112,7 @@
       "height": 1773
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/andina-1f60b61e.jpg",
+      "src": "/work/artist-grant-2023/andina-1f60b61e78c8.jpg",
       "alt": "Andina Marie Osario",
       "group": "Andina Marie Osario",
       "layout": "auto",
@@ -120,7 +120,7 @@
       "height": 1776
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/mati-still-df4a5140.png",
+      "src": "/work/artist-grant-2023/mati-still-df4a51408e3f.png",
       "alt": "Mati Jhurry",
       "group": "Mati Jhurry",
       "layout": "auto",
@@ -128,7 +128,7 @@
       "height": 1563
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/coaley-peak-a-fragment-2021-film-still-16ddb582.jpg",
+      "src": "/work/artist-grant-2023/coaley-peak-a-fragment-2021-film-still-16ddb5824489.jpg",
       "alt": "Dan Guthrie",
       "group": "Dan Guthrie",
       "layout": "auto",
@@ -138,12 +138,12 @@
   ],
   "videos": [
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/video-1-8cd75da8-2707-4ac5-9358-108abb727a8a.mp4",
+      "src": "/work/artist-grant-2023/8cd75da8-2707-4ac5-9358-108abb727a8a.mp4",
       "label": "Morgan Quaintance",
       "group": "Morgan Quaintance"
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2023grant/video-2-de18d3eb-ec9d-480a-94b2-8cf45f81b762.mp4",
+      "src": "/work/artist-grant-2023/de18d3eb-ec9d-480a-94b2-8cf45f81b762.mp4",
       "label": "Mati Jhurry",
       "group": "Mati Jhurry"
     }

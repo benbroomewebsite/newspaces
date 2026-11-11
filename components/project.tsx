@@ -1,10 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { mediaHref } from '@/lib/media'
 import { isPdfPage, projectView } from '@/lib/project-view'
 import { useRandomOrder } from '@/lib/use-random-order'
 import type { Work } from '@/lib/works'
@@ -78,20 +76,4 @@ export function ProjectPage({ work }: { work: Work }) {
       <nav className="project-return-bottom" aria-label="Return to index"><Link href="/" className="index-return">← Back to index</Link></nav>
     </section>
   </main>
-}
-
-// The index hover preview: title, details and one image.
-export function ProjectPreview({ work, type = work.type }: { work: Work; type?: string }) {
-  const images = useRandomOrder(work.images)
-  const preview = images[0]?.src || work.featuredImage
-
-  return <article className="project">
-    <header>
-      <h1>{work.indexTitle}</h1>
-      <p>{[type, work.publication, work.date].filter(Boolean).join(' · ')}</p>
-    </header>
-    {preview && <div className="project-media">
-      <Image src={mediaHref(preview)} alt={work.title} fill sizes="(max-width: 800px) 100vw, 30vw" priority />
-    </div>}
-  </article>
 }

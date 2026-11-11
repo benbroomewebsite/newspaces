@@ -92,11 +92,11 @@
     }
   ],
   "files": [],
-  "featuredImage": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/image-processing20241127-2-318gdw-d5a40254.jpg",
+  "featuredImage": "/work/artist-grant-2024/image-processing20241127-2-318gdw-d5a40254138a.jpg",
   "imageOrder": "random",
   "images": [
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/image-processing20241127-2-318gdw-d5a40254.jpg",
+      "src": "/work/artist-grant-2024/image-processing20241127-2-318gdw-d5a40254138a.jpg",
       "alt": "Nihaal Faizal",
       "group": "Nihaal Faizal",
       "layout": "auto",
@@ -104,7 +104,7 @@
       "height": 853
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/rat-section-announcement-ba97fdab.jpg",
+      "src": "/work/artist-grant-2024/rat-section-announcement-ba97fdab4d30.jpg",
       "alt": "Rat Section",
       "group": "Rat Section",
       "layout": "auto",
@@ -112,7 +112,7 @@
       "height": 1350
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/mg-9750-d7e86435.jpg",
+      "src": "/work/artist-grant-2024/mg-9750-d7e86435d7ae.jpg",
       "alt": "Ladji Diaby",
       "group": "Ladji Diaby",
       "layout": "auto",
@@ -122,12 +122,12 @@
   ],
   "videos": [
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/video-1-c72b251f-c4ce-4e24-9027-51f301d94a8b.mp4",
+      "src": "/work/artist-grant-2024/c72b251f-c4ce-4e24-9027-51f301d94a8b.mp4",
       "label": "Anhar Salem",
       "group": "Anhar Salem"
     },
     {
-      "src": "https://pub-2854c56706144613abe27bbd1eefcaa3.r2.dev/media/previouswinners-2024grant-ntd96/video-2-42381d74-daf9-4e96-a9dc-1a187f1d7bfe.mp4",
+      "src": "/work/artist-grant-2024/42381d74-daf9-4e96-a9dc-1a187f1d7bfe.mp4",
       "label": "Dina Mimi",
       "group": "Dina Mimi"
     }

@@ -1,247 +1,131 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
-import { aboutParagraphs, contact } from '@/lib/bio'
+import type { CSSProperties } from 'react'
+import { contact } from '@/lib/bio'
 import { mediaHref } from '@/lib/media'
-import { coverOf, type Programme, programmeById, programmes, programmeWorks } from '@/lib/programmes'
-import { session } from '@/lib/session'
+import { coverOf, type Programme, programmes } from '@/lib/programmes'
 import { siteName, siteTagline } from '@/lib/site'
 import type { Work } from '@/lib/works'
+import { ReturnPosition } from '@/components/return-position'
 import './home.css'
 
-// The New Spaces front page: Ben's typeface, ink and paper set in the Triple
-// Phase portfolio's grey page, boxes, cards and rule bands. Two layouts are on
-// trial: Boxes (cards across the page) and List (rows with a large preview).
-// ?layout=boxes or ?layout=list chooses one; the switch at the foot of the
-// screen is for review and goes once one is chosen.
+// The New Spaces front page, built on Daniel's Triple Phase portfolio
+// (triple-phase.com/portfolio): name box and notch, a description box beneath,
+// image cards 1px apart and rule bands for the information, set in Ben's font.
+// The programmes lead; programmes of several projects follow as sections.
 
-type Layout = 'boxes' | 'list'
-const layouts: Layout[] = ['boxes', 'list']
+// Placeholder copy until New Spaces supplies its own description, mission and trustees.
+const placeholder = {
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  about: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+  mission: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+}
 
-// "Goldsmiths CCA, London" → "Goldsmiths CCA", as on Ben's index.
 const venueOnly = (venue: string) => venue.replace(/,\s*[^,]+$/, '')
 const plural = (count: number) => `${count} ${count === 1 ? 'project' : 'projects'}`
+const sections = programmes.filter((programme) => programme.works.length > 1)
 
 export function Home() {
-  const rootRef = useRef<HTMLElement>(null)
-  const headRef = useRef<HTMLElement>(null)
-  const [filter, setFilter] = useState<string | null>(null)
-  const [layout, setLayout] = useState<Layout>('boxes')
-  const selected = programmeById(filter)
-  const shown = selected ? selected.works : programmeWorks
-
-  // The address takes precedence over the choices remembered for this visit.
-  // A saved scroll position belongs to one return trip from a project page.
-  useLayoutEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const requestedFilter = params.get('filter') ?? session.getItem('ns-filter')
-    const requestedLayout = params.get('layout') ?? session.getItem('ns-layout')
-    if (programmeById(requestedFilter)) setFilter(requestedFilter)
-    if (layouts.includes(requestedLayout as Layout)) setLayout(requestedLayout as Layout)
-    const scroll = session.getItem('ns-scroll')
-    session.removeItem('ns-scroll')
-    if (scroll) requestAnimationFrame(() => window.scrollTo(0, Number(scroll)))
-  }, [])
-
-  // The sticky preview in the list sits just below the header, whatever its height.
-  useLayoutEffect(() => {
-    const head = headRef.current
-    const root = rootRef.current
-    if (!head || !root) return
-    const observer = new ResizeObserver(() => root.style.setProperty('--ns-head-h', `${head.offsetHeight}px`))
-    observer.observe(head)
-    return () => observer.disconnect()
-  }, [])
-
-  const remember = (key: string, value: string | null) => {
-    if (value) session.setItem(key, value)
-    else session.removeItem(key)
-    const params = new URLSearchParams(window.location.search)
-    if (value) params.set(key.replace('ns-', ''), value)
-    else params.delete(key.replace('ns-', ''))
-    window.history.replaceState(null, '', params.size ? `?${params}` : window.location.pathname)
-  }
-  const chooseFilter = (id: string | null) => {
-    setFilter(id)
-    remember('ns-filter', id)
-    window.scrollTo(0, 0)
-  }
-  const chooseLayout = (next: Layout) => {
-    setLayout(next)
-    remember('ns-layout', next)
-  }
-  const leaving = () => session.setItem('ns-scroll', String(window.scrollY))
-
-  return <main ref={rootRef} className={`ns ns-home ns-layout-${layout}`} style={{ '--ns-count': programmes.length } as CSSProperties}>
+  return <main className="ns ns-home" style={{ '--ns-count': programmes.length } as CSSProperties}>
+    <ReturnPosition />
     <h1 className="sr-only">{siteName} — {siteTagline}</h1>
-    <header ref={headRef} className="ns-head">
-      <Link className="ns-head-name" href="/" onClick={() => chooseFilter(null)}>{siteName}</Link>
-      <nav className="ns-head-filters" aria-label="Programmes">
-        <button type="button" aria-pressed={!selected} onClick={() => chooseFilter(null)}>All</button>
-        {programmes.map((programme) => <button key={programme.id} type="button" aria-pressed={selected === programme} onClick={() => chooseFilter(selected === programme ? null : programme.id)}>
-          {programme.name}
-        </button>)}
-      </nav>
-      <nav className="ns-head-links" aria-label="Information"><a href="#about">About</a>, <a href="#contact">Contact</a></nav>
-    </header>
+    <Header />
 
-    {layout === 'boxes'
-      ? <Boxes selected={selected} shown={shown} onFilter={chooseFilter} onLeave={leaving} />
-      : <List key={filter ?? 'all'} selected={selected} onFilter={chooseFilter} onLeave={leaving} />}
+    <section className="ns-programmes" aria-label="Programmes">
+      {programmes.map((programme, index) => <ProgrammeCard key={programme.id} programme={programme} eager={index < 4} />)}
+    </section>
+
+    {sections.map((programme) => <section key={programme.id} id={programme.id} className="ns-section" aria-label={programme.name}>
+      <div className="ns-band"><h2>{programme.name}<sup>({programme.works.length})</sup></h2><h2>{programme.years}</h2></div>
+      <div className="ns-work">
+        {programme.works.map((work) => <ProjectCard key={work.slug} work={work} />)}
+      </div>
+    </section>)}
 
     <Information />
-
-    <div className="ns-switch" role="group" aria-label="Layout on trial">
-      <span>Layout</span>
-      {layouts.map((option) => <button key={option} type="button" aria-pressed={layout === option} onClick={() => chooseLayout(option)}>
-        {option === 'boxes' ? 'Boxes' : 'List'}
-      </button>)}
-    </div>
   </main>
 }
 
-type ViewProps = { selected?: Programme; onFilter: (id: string | null) => void; onLeave: () => void }
-
-// Boxes: the programmes fill the first screen; every project follows as a card.
-function Boxes({ selected, shown, onFilter, onLeave }: ViewProps & { shown: Work[] }) {
+// Name box and section box joined by a notch; the description and contact boxes hang beneath.
+function Header() {
   return <>
-    {selected
-      ? <Intro programme={selected} />
-      : <section className="ns-programmes" aria-label="Programmes">
-        {programmes.map((programme) => <ProgrammeCard key={programme.id} programme={programme} onFilter={onFilter} onLeave={onLeave} />)}
-      </section>}
-    <div className="ns-band"><h2>{selected ? selected.name : 'All projects'}</h2><h2>{plural(shown.length)}</h2></div>
-    <section className="ns-work" aria-label={selected ? selected.name : 'All projects'}>
-      {shown.map((work, index) => <ProjectCard key={work.slug} work={work} eager={Boolean(selected) && index < 3} onLeave={onLeave} />)}
-    </section>
+    <header className="ns-head">
+      <Link className="ns-head-name" href="/">{siteName}</Link>
+      <nav className="ns-head-nav" aria-label="Sections"><a href="#about">About</a>, <a href="#contact">Contact</a></nav>
+    </header>
+    <div className="ns-hooder">
+      <p className="ns-hooder-text">{placeholder.description}</p>
+      <div className="ns-hooder-info">
+        <p>
+          {siteTagline}<br /><br />
+          {contact.instagram ? <a href={contact.instagram} target="_blank" rel="noreferrer">Instagram</a> : 'Instagram'}
+        </p>
+        <p>
+          Contact:<br />
+          {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : 'To be confirmed'}
+        </p>
+      </div>
+    </div>
   </>
 }
 
-function ProgrammeCard({ programme, onFilter, onLeave }: { programme: Programme; onFilter: (id: string) => void; onLeave: () => void }) {
-  return <Link className="ns-card ns-card-programme" href={programme.href ?? `/?filter=${programme.id}`} onClick={(event) => {
-    if (programme.href) return onLeave()
-    event.preventDefault()
-    onFilter(programme.id)
-  }}>
+// A programme of one project opens it; a programme of several jumps to its section.
+function ProgrammeCard({ programme, eager }: { programme: Programme; eager: boolean }) {
+  const venues = [...new Set(programme.works.map((work) => venueOnly(work.publication)))].join(', ')
+  const card = <>
     <span className="ns-card-meta"><span>{programme.years}</span><span>{plural(programme.works.length)}</span></span>
-    <span className="ns-card-title">{programme.name}</span>
-    <span className="ns-card-media">
-      {programme.cover && <Image src={mediaHref(programme.cover)} alt="" fill sizes="(max-width: 640px) 100vw, 25vw" loading="eager" />}
+    <h2 className="ns-card-title">{programme.name}</h2>
+    <span className="ns-card-media ns-card-media-tall">
+      {programme.cover && <Image src={mediaHref(programme.cover)} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" loading={eager ? 'eager' : 'lazy'} />}
     </span>
-    {programme.text && <span className="ns-card-foot">{programme.text}</span>}
+    <span className="ns-card-tags">{programme.text || venues}</span>
+  </>
+  return programme.href
+    ? <Link className="ns-card" href={programme.href}>{card}</Link>
+    : <a className="ns-card" href={`#${programme.id}`}>{card}</a>
+}
+
+function ProjectCard({ work }: { work: Work }) {
+  const cover = coverOf(work)
+  return <Link className="ns-card" href={`/work/${work.slug}`}>
+    <span className="ns-card-meta"><span>{work.date}</span><span>{work.type}</span></span>
+    <h3 className="ns-card-title">{work.indexTitle}</h3>
+    <span className="ns-card-media">
+      {cover && <Image src={mediaHref(cover)} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />}
+    </span>
+    <span className="ns-card-tags">{venueOnly(work.publication)}</span>
   </Link>
 }
 
-function ProjectCard({ work, eager, onLeave }: { work: Work; eager: boolean; onLeave: () => void }) {
-  const cover = coverOf(work)
-  return <Link className="ns-card" href={`/work/${work.slug}`} onClick={onLeave}>
-    <span className="ns-card-meta"><span>{work.date}</span><span>{work.programme}</span></span>
-    <span className="ns-card-title">{work.indexTitle}</span>
-    <span className="ns-card-media">
-      {cover && <Image src={mediaHref(cover)} alt="" fill sizes="(max-width: 640px) 100vw, 33vw" loading={eager ? 'eager' : 'lazy'} />}
-    </span>
-    <span className="ns-card-foot">{venueOnly(work.publication)}</span>
-  </Link>
-}
-
-// A chosen programme: its name and text as one bold paragraph, as on the Triple Phase project pages.
-function Intro({ programme }: { programme: Programme }) {
-  return <p className="ns-intro">
-    <strong>{programme.name}</strong> ({programme.years}, {plural(programme.works.length)}).{programme.text && ` ${programme.text}`}
-  </p>
-}
-
-// List: programmes as headings over rows divided by rules. Pointing at a row
-// shows its images and text in the large panel beside the list, which keeps
-// the rows still; opening images inside the list would push the rows below
-// out from under the pointer.
-function List({ selected, onFilter, onLeave }: ViewProps) {
-  const [active, setActive] = useState<Work | null>(null)
-  const groups = selected ? [selected] : programmes
-  const preview = (work: Work) => {
-    if (window.matchMedia('(hover: hover) and (min-width: 801px)').matches) setActive(work)
-  }
-
-  return <div className="ns-list">
-    <div className="ns-list-rows">
-      {selected && <Intro programme={selected} />}
-      {groups.map((programme) => <section key={programme.id} className="ns-list-group" aria-label={programme.name}>
-        <h2 className="ns-list-heading">
-          <button type="button" onClick={() => onFilter(selected ? null : programme.id)}>{programme.name}</button>
-          <span>{programme.years}</span>
-          <span>{plural(programme.works.length)}</span>
-        </h2>
-        {programme.cover && <span className="ns-list-cover"><Image src={mediaHref(programme.cover)} alt="" fill sizes="100vw" /></span>}
-        <ul>
-          {programme.works.map((work) => <li key={work.slug}>
-            <Link className="ns-row" href={`/work/${work.slug}`} data-active={active === work || undefined} onClick={onLeave}
-              onMouseEnter={() => preview(work)} onFocus={() => preview(work)}>
-              <span>{work.indexTitle}</span>
-              <span>{venueOnly(work.publication)}</span>
-              <span>{work.date}</span>
-            </Link>
-          </li>)}
-        </ul>
-      </section>)}
-    </div>
-    <aside className="ns-preview" aria-live="polite">
-      {active ? <Preview key={active.slug} work={active} /> : <Idle groups={groups} />}
-    </aside>
-  </div>
-}
-
-// A heading line such as "The Judging Panel:" is joined to the paragraph it introduces.
-function excerpt(description: string) {
-  const [first = '', second] = description.split(/\n\n+/).map((paragraph) => paragraph.replace(/\s+/g, ' ').trim()).filter(Boolean)
-  const text = first.length < 40 && second ? `${first.replace(/[:;]?$/, ':')} ${second}` : first
-  return text.length > 280 ? `${text.slice(0, 280).replace(/\s+\S*$/, '')}…` : text
-}
-
-function Preview({ work }: { work: Work }) {
-  const cover = coverOf(work)
-  const sources = [...new Set([cover, ...work.images.map((image) => image.src)].filter(Boolean))].slice(0, 4) as string[]
-  const text = excerpt(work.description)
-  return <article className="ns-preview-work">
-    <div className={`ns-preview-images${sources.length > 1 ? ' has-strip' : ''}`}>
-      {sources.map((src, index) => <span key={src}>
-        <Image src={mediaHref(src)} alt="" fill sizes={index ? '15vw' : '50vw'} loading="eager" />
-      </span>)}
-    </div>
-    <div className="ns-preview-text">
-      <h2>{work.title}</h2>
-      <p>{[work.programme, work.publication, work.date].filter(Boolean).join(' · ')}</p>
-      {text && <p className="ns-preview-excerpt">{text}</p>}
-    </div>
-  </article>
-}
-
-// Before anything is pointed at: the programmes' own images.
-function Idle({ groups }: { groups: Programme[] }) {
-  return <div className={`ns-preview-idle ns-preview-idle-${groups.length}`}>
-    {groups.map((programme) => <figure key={programme.id}>
-      {programme.cover && <Image src={mediaHref(programme.cover)} alt="" fill sizes="25vw" loading="eager" />}
-      <figcaption>{programme.name}</figcaption>
-    </figure>)}
-  </div>
-}
-
-// About, mission, trustees and contact, in rule bands on the same page.
-// Mission and trustees await approved wording.
+// Rule bands: About and Mission in two columns, Trustees, then Contact as flowing text.
 function Information() {
+  const channels = [
+    contact.email && { name: 'email', label: contact.email, href: `mailto:${contact.email}` },
+    contact.instagram && { name: 'Instagram', label: 'Instagram', href: contact.instagram },
+  ].filter(Boolean) as { name: string; label: string; href: string }[]
+
   return <section className="ns-info" aria-label="Information">
-    <div className="ns-band" id="about"><h2>About</h2><h2>Mission</h2></div>
+    <div className="ns-band" id="about"><h2>{siteName}</h2><h2>About</h2></div>
     <div className="ns-cols">
-      <div>{aboutParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-      <p className="ns-pending">To be confirmed.</p>
+      <p>{siteName}<br />{siteTagline}</p>
+      <p>{placeholder.about}</p>
     </div>
-    <div className="ns-band" id="trustees"><h2>Trustees</h2></div>
-    <div className="ns-cols"><p className="ns-pending">To be confirmed.</p></div>
+    <div className="ns-band"><h2>Mission</h2><h2>Trustees</h2></div>
+    <div className="ns-cols">
+      <p>{placeholder.mission}</p>
+      <p>To be confirmed.</p>
+    </div>
     <div className="ns-band" id="contact"><h2>Contact</h2></div>
-    <p className="ns-flow">
-      {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : <span className="ns-pending">Contact details to be confirmed.</span>}
-      {contact.instagram && <> <a href={contact.instagram} target="_blank" rel="noreferrer">↳ Instagram</a></>}
-    </p>
+    {channels.length
+      ? <>
+        <p className="ns-flow">
+          Get in touch through{' '}
+          {channels.map((channel, index) => <span key={channel.name}><sup>{index + 1}</sup>{channel.name}{index < channels.length - 1 ? ' or ' : '.'}</span>)}
+        </p>
+        <ul className="ns-pills">
+          {channels.map((channel) => <li key={channel.name}><a className="ns-pill" href={channel.href} {...(channel.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>{channel.label}</a></li>)}
+        </ul>
+      </>
+      : <p className="ns-flow">Contact details to follow.</p>}
   </section>
 }

@@ -1,140 +1,108 @@
 /*
- * New Spaces front page, draft for review.
- * From Ben's portfolio: MS Mincho at his body size, his ink and paper, the
- *   underlined active filter, ↳ and · in the text, the hover preview.
- * From the Triple Phase portfolio: the grey page, boxes behind the text, 1px
- *   gaps, the name box and its notch, cards (meta, title, image, foot), rule
- *   bands and bold titles at a larger size.
+ * New Spaces front page, ported from Daniel's Triple Phase portfolio
+ * (v0-triple-phase-website/app/portfolio/portfolio.css): grey page, white only
+ * behind text and on the cards, name and section boxes joined by a notch, cards
+ * 1px apart, rule bands, flowing contact text and pills. The typeface is Ben's
+ * (--site-font in globals.css), so his ?font= trial applies here too.
  */
 html:has(.ns-home), body:has(.ns-home) { height: auto; overflow: visible; }
 body:has(.ns-home) { background: #b9b9b7; }
 
 .ns {
-  --ns-page: #b9b9b7;            /* Triple Phase grey, for now */
-  --ns-box: var(--paper);        /* Ben's paper, behind text and on the cards */
-  --ns-ink: var(--ink);
-  --ns-quiet: #66665f;           /* filters not chosen, on the paper */
-  --ns-rule: rgb(17 17 17 / .5);
-  --ns-shade: #d9d9d5;           /* an image still loading */
-  --ns-margin: var(--edge);
-  --ns-notch: 14px;
-  --ns-indent: 12px;
-  --ns-row-gap: 48px;
-  --ns-s: 13px;
-  --ns-m: clamp(20px, 1.6vw, 28px);
-  min-height: 100dvh;
-  padding-bottom: 88px;
-  background: var(--ns-page);
+  --ns-grey: #b9b9b7;
+  --ns-white: #fff;
+  --ns-ink: #000;
+  --ns-rule: rgb(0 0 0 / .55);
+  --ns-margin: clamp(14px, 2.2vw, 44px);  /* the same on the left and the right */
+  --ns-edge: 12px;
+  --ns-pad: 3px;                          /* white box padding */
+  --ns-indent: clamp(10px, 1.116vw, 18px);
+  --ns-row-gap: clamp(32px, 3vw, 48px);
+  --ns-s: clamp(10.5px, .8vw, 12px);      /* labels */
+  --ns-t: clamp(12px, .92vw, 14px);       /* text */
+  --ns-m: clamp(15px, 1.3vw, 19px);       /* titles */
+  --ns-label: 500;
+  --ns-title: 600;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background: var(--ns-grey);
   color: var(--ns-ink);
+  font: 400 var(--ns-t)/1.15 'Site Arrows', 'Site Quotes', var(--site-font);
 }
-.ns button { padding: 0; background: transparent; text-align: left; }
+.ns a { color: inherit; }
+.ns :focus-visible { outline: 1px solid var(--ns-ink); outline-offset: 2px; }
 
-/* The one box at the top: name, notch, then the filters and About/Contact. */
-.ns-head { position: sticky; top: 0; z-index: 20; display: flex; margin: 0 var(--ns-margin); font-size: clamp(15px, 1.15vw, 18px); font-weight: 700; line-height: 1.2; }
-.ns-head > * { padding: 8px var(--ns-indent) 7px; background: var(--ns-box); }
-/* The name box is as wide as the first programme below it. */
-.ns-head-name { position: relative; flex: 0 0 calc((100% - (var(--ns-count) - 1) * 1px) / var(--ns-count)); }
-.ns-head-name::after { content: ''; position: absolute; top: 0; right: calc(-1 * var(--ns-notch) - 1px); width: calc(var(--ns-notch) + 2px); height: 30%; background: var(--ns-box); }
-.ns-head-filters { display: flex; flex: 1; flex-wrap: wrap; gap: 0 1.1em; margin-left: var(--ns-notch); }
-.ns-head-filters button { color: var(--ns-quiet); }
-.ns-head-filters button[aria-pressed="true"] { color: var(--ns-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.ns-head-links { white-space: nowrap; }
+/* Header: name box, notch, section box; the description and contact boxes hang beneath. */
+.ns-head { position: sticky; z-index: 20; top: 0; display: flex; margin-inline: var(--ns-margin); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; }
+.ns-head-name { position: relative; flex: 0 0 25%; padding: 7px 0 7px calc(var(--ns-indent) + var(--ns-pad)); background: var(--ns-white); }
+/* The notch: a white tab over the top of the gap, leaving a grey slot beneath it. */
+.ns-head-name::after { content: ''; position: absolute; top: 0; right: -1.3vw; width: 1.4vw; height: 25%; background: var(--ns-white); }
+.ns-head-nav { flex: 1; margin-left: 1.1vw; padding: 7px var(--ns-edge) 7px var(--ns-indent); background: var(--ns-white); }
 
-/* Shared card: small meta line, bold title, the image edge to edge, a small foot. */
-.ns-card { display: flex; flex-direction: column; min-width: 0; background: var(--ns-box); }
-.ns-card > span { display: block; }
-.ns-card > .ns-card-meta { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-indent); padding: 5px var(--ns-indent) 0; font-size: var(--ns-s); line-height: 1.25; }
-.ns-card-title { padding: 1px var(--ns-indent) 7px; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; text-wrap: balance; }
-.ns-card-media { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--ns-shade); }
-.ns-card-media img, .ns-preview img, .ns-list-cover img { object-fit: cover; }
-.ns-card-foot { padding: 5px var(--ns-indent) 7px; font-size: var(--ns-s); line-height: 1.3; }
+.ns-hooder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin-inline: var(--ns-margin); }
+.ns-hooder-text, .ns-hooder-info { margin: 0; padding: 0 var(--ns-pad) 2px; background: var(--ns-white); }
+.ns-hooder-text { margin-right: 1.116vw; text-indent: var(--ns-indent); }
+.ns-hooder-info { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-indent); margin-top: 1px; }
+.ns-hooder-info p { margin: 0; }
 
-/* Boxes: the programmes fill the first screen, tall images side by side. */
-.ns-programmes { display: grid; grid-template-columns: repeat(var(--ns-count), minmax(0, 1fr)); column-gap: 1px; align-items: start; margin: 1px var(--ns-margin) 0; }
-.ns-card-programme .ns-card-media { aspect-ratio: 2 / 3; max-height: max(320px, calc(100svh - var(--ns-head-h, 40px) - 9.5rem)); }
-.ns-work { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; row-gap: var(--ns-row-gap); align-items: start; margin: 10px var(--ns-margin) 0; }
+/* Cards: year and kind, title, one image edge to edge, tags. */
+.ns-card { display: block; overflow: hidden; background: var(--ns-white); text-decoration: none; }
+.ns-card-meta, .ns-card-tags { font-size: var(--ns-s); font-weight: var(--ns-label); line-height: 1.2; letter-spacing: .005em; }
+.ns-card-meta { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-indent); padding-top: 3px; }
+.ns-card-meta > :first-child { padding-left: var(--ns-indent); }
+.ns-card-title { margin: 0; padding: 0 var(--ns-pad) var(--ns-pad); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1.02; letter-spacing: -.015em; text-indent: calc(var(--ns-indent) - var(--ns-pad)); text-wrap: pretty; }
+.ns-card-media { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #d4d4d1; }
+.ns-card-media-tall { aspect-ratio: 4 / 5; }
+.ns-card-media img { object-fit: cover; }
+.ns-card-tags { display: block; padding: 3px var(--ns-pad) 4px; text-indent: var(--ns-indent); }
 
-/* A chosen programme, as one bold paragraph. */
-.ns-intro { margin: 1px var(--ns-margin) 0; padding: 6px var(--ns-indent) 9px; background: var(--ns-box); font-size: var(--ns-m); line-height: 1.12; text-wrap: pretty; }
+/* The programmes: one row across the first screen, as far below the boxes as the portfolio's first cards. */
+.ns-programmes { display: grid; grid-template-columns: repeat(var(--ns-count), minmax(0, 1fr)); align-items: start; column-gap: 1px; padding: clamp(36px, 3.9vw, 56px) var(--ns-margin) 0; }
 
-/* Rule bands: small labels between two rules, on three columns. */
-.ns-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin: var(--ns-row-gap) var(--ns-margin) 0; padding: 4px 0 3px; border-block: 1px solid var(--ns-rule); scroll-margin-top: calc(var(--ns-head-h, 40px) + 12px); }
+/* A programme of several projects: a band, then the projects three to a row.
+   Jumping to one leaves its band a little below the sticky header. */
+.ns-section { scroll-margin-top: calc(48px - var(--ns-row-gap)); }
+.ns-work { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; column-gap: 1px; row-gap: var(--ns-row-gap); padding: 1.4em var(--ns-margin) 0; }
+
+/* Information: rule bands with small labels, on the same three columns. */
+.ns-band, .ns-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; }
 .ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: span 2; }
-.ns-band h2 { margin: 0; font: inherit; font-size: var(--ns-s); font-weight: 700; line-height: 1.25; }
+.ns-band { margin: var(--ns-row-gap) var(--ns-margin) 0; padding: 4px 0 3px; border-top: 1px solid var(--ns-rule); border-bottom: 1px solid var(--ns-rule); scroll-margin-top: 40px; }
+.ns-info .ns-band:not(:first-child) { margin-top: 0; }
+.ns-band h2 { margin: 0; font: inherit; font-size: var(--ns-s); font-weight: var(--ns-label); line-height: 1.2; letter-spacing: .005em; }
+.ns-band sup { margin-left: .2em; font-size: .72em; line-height: 0; vertical-align: .3em; }
+.ns-cols { margin-inline: var(--ns-margin); padding: 10px 0 var(--ns-row-gap); line-height: 1.3; }
+.ns-cols p { max-width: 46em; margin: 0; }
 
-/* List: rows divided by rules on the paper; the preview fills the other half. */
-.ns-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 1px; align-items: start; margin: 1px var(--ns-margin) 0; }
-.ns-list-rows { min-height: calc(100svh - var(--ns-head-h, 40px) - 1px); padding-bottom: 24px; background: var(--ns-box); }
-.ns-list-rows .ns-intro { margin: 0; }
-.ns-list-group ul { margin: 0; padding: 0; list-style: none; }
-.ns-list-heading { display: grid; grid-template-columns: minmax(0, 1fr) 6.5em 6.5em; column-gap: var(--ns-indent); align-items: baseline; margin: 0; padding: 26px var(--ns-indent) 6px; font: inherit; font-size: var(--ns-s); }
-.ns-list-group:first-child .ns-list-heading { padding-top: 8px; }
-.ns-list-heading button { justify-self: start; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; }
-.ns-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 5.5em; column-gap: var(--ns-indent); padding: 5px var(--ns-indent) 4px; border-top: 1px solid var(--ns-rule); }
-.ns-list-group li:last-child .ns-row { border-bottom: 1px solid var(--ns-rule); }
-.ns-row > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ns-row[data-active] { background: var(--ns-ink); color: var(--ns-box); }
-.ns-list-cover { display: none; }
-
-.ns-preview { position: sticky; top: calc(var(--ns-head-h, 40px) + 1px); display: flex; flex-direction: column; height: calc(100svh - var(--ns-head-h, 40px) - 1px - var(--ns-switch-h, 0px)); min-height: 0; }
-.ns-preview-work, .ns-preview-idle { flex: 1; min-height: 0; animation: ns-fade 260ms ease both; }
-.ns-preview-work { display: flex; flex-direction: column; }
-.ns-preview-images { display: grid; flex: 1; min-height: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 1px; }
-.ns-preview-images.has-strip { grid-template-rows: minmax(0, 3fr) minmax(0, 1fr); }
-.ns-preview-images > span, .ns-preview-idle figure { position: relative; min-height: 0; margin: 0; overflow: hidden; background: var(--ns-shade); }
-.ns-preview-images > :first-child { grid-column: 1 / -1; }
-.ns-preview-text { margin-top: 1px; padding: 6px var(--ns-indent) 10px; background: var(--ns-box); }
-.ns-preview-text h2 { margin: 0; font: inherit; font-size: var(--ns-m); font-weight: 700; line-height: 1.05; }
-.ns-preview-text p { margin: 5px 0 0; }
-.ns-preview-text h2 + p { font-size: var(--ns-s); }
-.ns-preview-excerpt { max-width: 40em; }
-.ns-preview-idle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 1px; }
-.ns-preview-idle-1 { grid-template-columns: minmax(0, 1fr); }
-.ns-preview-idle figcaption { position: absolute; bottom: 0; left: 0; padding: 4px var(--ns-indent) 3px; background: var(--ns-box); font-weight: 700; }
-@keyframes ns-fade { from { opacity: 0; } }
-
-/* About, Mission, Trustees, Contact. */
-.ns-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin: 0 var(--ns-margin); padding-top: 10px; }
-.ns-cols p { max-width: 36em; margin: 0 0 12px; }
-.ns-flow { margin: 10px var(--ns-margin) 0; font-size: var(--ns-m); font-weight: 700; line-height: 1.2; }
-
-/* Review only: switches the layout on trial. The preview stops above it. */
-.ns-home { --ns-switch-h: 54px; }
-.ns-switch { position: fixed; bottom: 14px; left: 50%; z-index: 30; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px; background: var(--ns-ink); color: var(--ns-box); font-size: var(--ns-s); line-height: 1; transform: translateX(-50%); }
-.ns-switch span { padding: 0 6px 0 9px; }
-.ns .ns-switch button { padding: 5px 11px 4px; border-radius: 999px; color: inherit; }
-.ns .ns-switch button[aria-pressed="true"] { background: var(--ns-box); color: var(--ns-ink); }
+/* Contact: flowing text with superscript numbers, then pills at the same size. */
+.ns-flow { margin: 0 var(--ns-margin); padding: 10px 0 var(--ns-row-gap); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1.2; letter-spacing: -.015em; text-wrap: pretty; }
+.ns-flow:has(+ .ns-pills) { padding-bottom: 0; }
+.ns-flow sup { margin-right: .05em; font-size: .55em; line-height: 0; vertical-align: .7em; }
+.ns-pills { display: flex; flex-wrap: wrap; gap: .3em .25em; margin: 0 var(--ns-margin); padding: .6em 0 var(--ns-row-gap); list-style: none; font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.015em; }
+.ns-pill { display: inline-block; padding: .12em .5em .14em; border: 1px solid currentColor; border-radius: 999px; white-space: nowrap; text-decoration: none; }
 
 @media (hover: hover) {
-  .ns-head-filters button:hover { color: var(--ns-ink); }
-  .ns-head-links a:hover, .ns-flow a:hover, .ns-list-heading button:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .ns-card:hover .ns-card-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .1em; }
-  .ns-row:hover { background: var(--ns-ink); color: var(--ns-box); }
+  .ns-head a:hover, .ns-hooder a:hover { opacity: .25; }
+  .ns-pill:hover { color: var(--ns-white); background: var(--ns-ink); }
 }
 @media (max-width: 1024px) {
-  .ns-programmes, .ns-work { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ns-programmes { row-gap: 1px; }
-  .ns-head-name { flex-basis: auto; }
-  .ns-card-programme .ns-card-media { aspect-ratio: 4 / 5; max-height: none; }
-  .ns-list { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
-}
-@media (max-width: 800px) {
-  .ns { --ns-m: 20px; --ns-row-gap: 32px; }
-  .ns-head { flex-wrap: wrap; }
-  .ns-head-name { flex: 1 1 auto; }
-  .ns-head-links { margin-left: var(--ns-notch); }
-  .ns-head-filters { flex-basis: 100%; order: 3; margin: 1px 0 0; }
-  .ns-list { display: block; }
-  .ns-preview { display: none; }
-  .ns-list-cover { position: relative; display: block; aspect-ratio: 3 / 2; }
-  .ns-list-heading { grid-template-columns: minmax(0, 1fr) auto; }
-  .ns-list-heading > span:last-child, .ns-row > span:nth-child(2) { display: none; }
-  .ns-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ns-programmes, .ns-work, .ns-hooder, .ns-band, .ns-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ns-programmes { row-gap: var(--ns-row-gap); }
+  .ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: auto; }
+  .ns-head-name { flex-basis: 33%; }
+  .ns-head-name::after { right: -2.5vw; width: 3vw; }
+  .ns-head-nav { margin-left: 2.2vw; }
 }
 @media (max-width: 640px) {
-  .ns-programmes, .ns-work, .ns-cols { grid-template-columns: minmax(0, 1fr); }
-  .ns-cols > :nth-child(2) { grid-column: auto; }
-  .ns-work { row-gap: 24px; }
-  .ns-band { display: flex; justify-content: space-between; gap: var(--ns-indent); }
+  .ns { --ns-margin: 12px; --ns-edge: 10px; --ns-t: 13px; --ns-m: 17px; }
+  .ns-head { font-size: 15px; white-space: nowrap; }
+  .ns-head-name { flex: 0 0 auto; padding-right: .7em; }
+  .ns-head-name::after { right: -4.5vw; width: 4.5vw; }
+  .ns-head-nav { margin-left: 4vw; }
+  .ns-programmes, .ns-work, .ns-hooder, .ns-band, .ns-cols { grid-template-columns: minmax(0, 1fr); }
+  .ns-programmes, .ns-work { row-gap: 24px; }
+  .ns-hooder-text { margin-right: 0; padding-bottom: 6px; }
+  .ns-band h2 + h2 { display: none; }
+  .ns-cols { row-gap: 14px; }
 }
-@media (prefers-reduced-motion: reduce) { .ns-preview-work, .ns-preview-idle { animation: none; } }
