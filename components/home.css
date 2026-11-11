@@ -111,7 +111,7 @@ body:has(.ns) { background: var(--paper); }
 .ns-pill { display: inline-block; padding: .12em .5em .14em; border: 1px solid currentColor; border-radius: 999px; white-space: nowrap; text-decoration: none; }
 
 @media (hover: hover) {
-  .ns-head a:hover, .ns-hooder a:hover, .ns-row-text p + a:hover { opacity: .25; }
+  .ns-head-nav a:hover, .ns-hooder a:hover, .ns-row-text p + a:hover { opacity: .25; }
   .ns-row-title:hover, .ns-card:hover .ns-card-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .1em; }
   .ns-pill:hover { color: var(--ns-white); background: var(--ns-ink); }
 }

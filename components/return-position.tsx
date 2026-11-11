@@ -9,9 +9,12 @@ export function ReturnPosition() {
   useLayoutEffect(() => {
     const key = `ns-scroll:${window.location.pathname}`
     const saved = session.getItem(key)
-    session.removeItem(key)
-    // After the router's own scroll to the top of the new page.
-    const frame = saved ? requestAnimationFrame(() => window.scrollTo(0, Number(saved))) : 0
+    // After the router's own scroll to the top of the new page. The position is
+    // forgotten only once applied: an effect that runs twice must still find it.
+    const frame = saved ? requestAnimationFrame(() => {
+      window.scrollTo(0, Number(saved))
+      session.removeItem(key)
+    }) : 0
     const remember = (event: MouseEvent) => {
       if (event.target instanceof Element && event.target.closest('a[href^="/work/"], a[href^="/programmes/"]')) session.setItem(key, String(window.scrollY))
     }

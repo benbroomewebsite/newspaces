@@ -7,6 +7,7 @@ import { placeholder } from '@/lib/placeholder'
 import { coverOf, excerpt, type Programme, programmes } from '@/lib/programmes'
 import { siteName, siteTagline } from '@/lib/site'
 import type { Work } from '@/lib/works'
+import { HomeLink } from '@/components/home-link'
 import { ReturnPosition } from '@/components/return-position'
 import './home.css'
 
@@ -40,7 +41,7 @@ export function Home({ layout = 'rows' }: { layout?: 'rows' | 'cards' }) {
 // Name box and section box joined by a notch.
 export function Header() {
   return <header className="ns-head">
-    <Link className="ns-head-name" href="/">{siteName}</Link>
+    <HomeLink className="ns-head-name">{siteName}</HomeLink>
     <nav className="ns-head-nav" aria-label="Sections"><a href="/#about">About</a>, <a href="/#trustees">Trustees</a>, <a href="/#contact">Contact</a></nav>
   </header>
 }
