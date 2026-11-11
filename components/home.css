@@ -112,6 +112,8 @@ body:has(.ns) { background: var(--paper); }
 
 @media (hover: hover) {
   .ns-head-nav a:hover, .ns-hooder a:hover, .ns-row-text p + a:hover { opacity: .25; }
+  /* The name is its own white box: only the text goes grey, the box stays. */
+  .ns-head-name:hover { color: rgb(0 0 0 / .25); }
   .ns-row-title:hover, .ns-card:hover .ns-card-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .1em; }
   .ns-pill:hover { color: var(--ns-white); background: var(--ns-ink); }
 }
