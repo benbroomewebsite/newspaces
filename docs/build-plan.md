@@ -12,14 +12,18 @@ The front page uses the boxes and type of Daniel's Triple Phase portfolio
 (triple-phase.com/portfolio) on Ben's grey, set in Ben's font. Keep it simple.
 Project pages stay as on Ben's site.
 
-- Use the portfolio's top: the name box and its notch, About and Contact, and
+- Use the portfolio's top: the name box and its notch, About, Trustees and Contact, and
   a description box and contact box beneath. The text is placeholder until
   New Spaces supplies its own.
 - Show each programme as a wide white box: its name, text and a link on the
-  left, three images to the right. Use one gap (12px) between the header
-  boxes, each programme and the About section.
-- Keep the description (About) and Contact at the foot of the page, in rule
-  bands. No mission statement. Trustees get a separate page later.
+  left, three images to the right.
+- Use one spacing measurement throughout (`--ns-space`, about 16px at desktop
+  width). It is the gap between the boxes, down the page and between the two
+  description boxes, the white around and between the images, and the distance
+  from the top of a box to the top of its text (the header and each programme).
+- Put About, Trustees and Contact at the foot of the page in rule bands, all at
+  the body text size. The meeting notes ask for "about section, mission
+  statement, trustees, all on the main site". The mission statement is left out for now.
 - No category lines, no project counts, no list and no filter bar (all tried and dropped).
 - Use Ben's grey (`#eeeeeb`, his `--paper`) for the page.
 - Set the text a little larger than on the portfolio, with the body text
@@ -38,17 +42,18 @@ portfolio's `portfolio.css` and `portfolio-ui.tsx`.
 ## The page
 
 ```
-┌ New Spaces ┐┌ About, Contact ─────────────────────────────────────────┐
+┌ New Spaces ┐┌ About, Trustees, Contact ───────────────────────────────┐
 ├ description ───────┤ ├ tagline, Instagram │ Contact ┤
-                         12px
+                         space
 ┌ Artist Membership ┬ image ─┬ image ─┬ image ──→ (runs off the edge)
 │ text              │        │        │
 │ ↳ Go to …         │        │        │
 └───────────────────┴────────┴────────┘
-                         12px
+                         space
 ┌ Artist Grant … (and so on for each programme)
-                         12px
+                         space
 ──── New Spaces ─── About ──────────────────────────────────────
+──── Trustees ──────────────────────────────────────────────────
 ──── Contact ───────────────────────────────────────────────────
 ```
 
@@ -115,7 +120,7 @@ presenting live music and performance art in underused public space".
 - The programmes are defined in `lib/programmes.ts` for now. Later, move them
   into a Keystatic collection (title, cover, text, order), so a fifth can be
   added in the editor without code.
-- Add the description to the `site` singleton beside email and Instagram. Trustees (name and role) get their own page.
+- Add the description to the `site` singleton beside email and Instagram. Trustees (name and role) fill the Trustees section.
 - `scripts/import-from-portfolio.mjs` copies the listed projects and their
   media from Ben's checkout. Re-running it refreshes them from the portfolio
   and overwrites any local edits to those files.
@@ -172,7 +177,7 @@ Next:
 
 1. Restyle the project pages to match the front page, keeping their layout and readers.
 2. Decide the font (MS Mincho or a sans-serif), then remove Ben's font trial.
-3. Move the programmes and their texts into the editor. Add the description and a trustees page.
+3. Move the programmes and their texts into the editor. Add the description and the trustees.
 4. Set up the R2 bucket and upload the media. This needs Ben's login.
 5. Run `pnpm test`, `pnpm typecheck` and `pnpm build`. In a browser at desktop
    and 390px, check the programme links, back navigation, keyboard focus and that the page has no horizontal scroll.

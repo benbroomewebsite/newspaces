@@ -2,9 +2,12 @@
  * New Spaces front page and programme pages, ported from Daniel's Triple Phase
  * portfolio (v0-triple-phase-website/app/portfolio/portfolio.css): white only
  * behind text and on the cards, name and section boxes joined by a notch, cards
- * 1px apart, rule bands, flowing contact text and pills. The page is Ben's paper
- * and the typeface Ben's (--paper and --site-font in globals.css; his ?font=
- * trial applies here too). Text runs a little larger than on the portfolio.
+ * 1px apart, rule bands. The page is Ben's paper and the typeface Ben's
+ * (--paper and --site-font in globals.css; his ?font= trial applies here too).
+ *
+ * One measurement, --ns-space, sets the spacing: the gap between the boxes (down
+ * the page and between the description boxes), the white around and between the
+ * images, and the distance from the top of a box to the top of its text.
  */
 html:has(.ns), body:has(.ns) { height: auto; overflow: visible; }
 /* A scrollbar appearing or going must not change the width of the page. */
@@ -17,10 +20,9 @@ body:has(.ns) { background: var(--paper); }
   --ns-ink: #000;
   --ns-rule: rgb(0 0 0 / .55);
   --ns-margin: clamp(14px, 2.2vw, 44px);  /* the same on the left and the right */
-  --ns-edge: 12px;
-  --ns-pad: 3px;                          /* white box padding */
-  --ns-space: 12px;                       /* one gap between the boxes down the front page */
-  --ns-indent: clamp(10px, 1.116vw, 18px);
+  --ns-space: clamp(10px, 1.116vw, 18px); /* the one spacing measurement (above) */
+  --ns-indent: var(--ns-space);
+  --ns-pad: 3px;                          /* card padding */
   --ns-row-gap: clamp(32px, 3vw, 48px);
   --ns-top-gap: clamp(36px, 3.9vw, 56px); /* programme pages: from the boxes at the top to the cards */
   --ns-s: clamp(11.5px, .85vw, 13px);     /* labels */
@@ -39,31 +41,35 @@ body:has(.ns) { background: var(--paper); }
 .ns a { color: inherit; }
 .ns :focus-visible { outline: 1px solid var(--ns-ink); outline-offset: 2px; }
 
-/* Header: name box, notch, section box; the description and contact boxes hang beneath. */
+/* Header: name box, notch, section box. The text's capitals sit --ns-space
+   below the top of the page, as a programme's name sits in its box. */
 .ns-head { position: sticky; z-index: 20; top: 0; display: flex; margin-inline: var(--ns-margin); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; }
-.ns-head-name { position: relative; flex: 0 0 25%; padding: 7px 0 7px calc(var(--ns-indent) + var(--ns-pad)); background: var(--ns-white); }
+.ns-head > * { padding: var(--ns-space); background: var(--ns-white); text-box: trim-both cap alphabetic; }
+.ns-head-name { position: relative; flex: 0 0 25%; }
 /* The notch: a white tab over the top of the gap, leaving a slot of the page beneath it. */
-.ns-head-name::after { content: ''; position: absolute; top: 0; right: -1.3vw; width: 1.4vw; height: 25%; background: var(--ns-white); }
-.ns-head-nav { flex: 1; margin-left: 1.1vw; padding: 7px var(--ns-edge) 7px var(--ns-indent); background: var(--ns-white); }
+.ns-head-name::after { content: ''; position: absolute; top: 0; right: calc(-1 * var(--ns-space) - 2px); width: calc(var(--ns-space) + 4px); height: 25%; background: var(--ns-white); }
+.ns-head-nav { flex: 1; margin-left: var(--ns-space); }
 
-.ns-hooder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; margin-inline: var(--ns-margin); }
-.ns-hooder-text, .ns-hooder-info { margin: 0; padding: 0 var(--ns-pad) 3px; background: var(--ns-white); }
-.ns-hooder-text { margin-right: 1.116vw; text-indent: var(--ns-indent); }
-.ns-hooder-info { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-indent); margin-top: 1px; }
+/* The description and contact boxes hang beneath the header, --ns-space apart. */
+.ns-hooder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-inline: var(--ns-margin); }
+.ns-hooder-text, .ns-hooder-info { margin: 0; padding: 0 var(--ns-space) var(--ns-space); background: var(--ns-white); }
+.ns-hooder-text { margin-right: var(--ns-space); }
+.ns-hooder-info { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--ns-space); margin-top: 1px; padding-top: 2px; }
 .ns-hooder-info p { margin: 0; }
 
-/* Programmes: one wide white box each, the same gap below the header and between them.
-   The text sits on the left, in line with the name in the header; the images fill the rest. */
+/* Programmes: one wide white box each, --ns-space apart. The text sits on the
+   left, in line with the name in the header; the images start in line with the
+   About box above, with --ns-space of white around and between them. */
 .ns-rows { display: flex; flex-direction: column; gap: var(--ns-space); padding: var(--ns-space) var(--ns-margin) 0; }
-.ns-row { display: grid; grid-template-columns: 25% minmax(0, 1fr); align-items: start; padding: var(--ns-pad); background: var(--ns-white); }
-.ns-row-text { padding: 0 var(--ns-indent) var(--ns-indent); line-height: 1.3; }
+.ns-row { display: grid; grid-template-columns: calc(25% + var(--ns-space) / 2) minmax(0, 1fr); align-items: start; row-gap: var(--ns-space); padding: var(--ns-space); background: var(--ns-white); }
+.ns-row-text { padding-right: var(--ns-space); line-height: 1.3; }
 /* The name's capitals start level with the top of the first image. */
-.ns-row-text h2 { margin: 0 0 14px; font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; text-box: trim-start cap alphabetic; }
-.ns-row-text p { max-width: 32em; margin: 0 0 14px; }
+.ns-row-text h2 { margin: 0 0 var(--ns-space); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; text-box: trim-start cap alphabetic; }
+.ns-row-text p { max-width: 32em; margin: 0 0 var(--ns-space); }
 .ns-row-text a { text-decoration: none; }
-/* Three images at one height, 3px apart; the last runs off the edge and they
-   scroll sideways, without a visible scrollbar. */
-.ns-row-strip { display: flex; gap: var(--ns-pad); height: clamp(240px, 30vw, 460px); overflow-x: auto; scrollbar-width: none; }
+/* Three images at one height; the last runs off the edge and they scroll
+   sideways, without a visible scrollbar. */
+.ns-row-strip { display: flex; gap: var(--ns-space); height: clamp(200px, 25vw, 400px); overflow-x: auto; scrollbar-width: none; }
 .ns-row-strip::-webkit-scrollbar { display: none; }
 .ns-row-image { flex: 0 0 auto; height: 100%; margin: 0; }
 .ns-row-image img { display: block; width: auto; height: 100%; }
@@ -83,23 +89,23 @@ body:has(.ns) { background: var(--paper); }
 .ns-programmes { display: grid; grid-template-columns: repeat(var(--ns-count), minmax(0, 1fr)); align-items: start; column-gap: 1px; padding: var(--ns-space) var(--ns-margin) 0; }
 
 /* A programme page: its text as one paragraph under the header, then its projects. */
-.ns-intro { margin: 1px var(--ns-margin) 0; padding: 4px var(--ns-indent) 6px calc(var(--ns-indent) + var(--ns-pad)); background: var(--ns-white); font-size: var(--ns-m); line-height: 1.15; letter-spacing: -.01em; text-wrap: pretty; }
+.ns-intro { margin: 1px var(--ns-margin) 0; padding: 2px var(--ns-space) var(--ns-space); background: var(--ns-white); font-size: var(--ns-m); line-height: 1.15; letter-spacing: -.01em; text-wrap: pretty; }
 .ns-intro strong { font-weight: var(--ns-title); }
 .ns-work { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; column-gap: 1px; row-gap: var(--ns-row-gap); padding: var(--ns-top-gap) var(--ns-margin) 0; }
 
-/* Information: rule bands with small labels, on three columns. */
+/* Information: rule bands on three columns, all at the body text size. */
 .ns-band, .ns-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 1px; }
 .ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: span 2; }
-.ns-band { margin: var(--ns-space) var(--ns-margin) 0; padding: 4px 0 3px; border-top: 1px solid var(--ns-rule); border-bottom: 1px solid var(--ns-rule); scroll-margin-top: 48px; }
+.ns-band { margin: var(--ns-space) var(--ns-margin) 0; padding: 4px 0 3px; border-top: 1px solid var(--ns-rule); border-bottom: 1px solid var(--ns-rule); scroll-margin-top: 64px; }
 .ns-info .ns-band:not(:first-child) { margin-top: 0; }
-.ns-band h2 { margin: 0; font: inherit; font-size: var(--ns-s); font-weight: var(--ns-label); line-height: 1.2; letter-spacing: .005em; }
+.ns-band h2 { margin: 0; font: inherit; }
 .ns-cols { margin-inline: var(--ns-margin); padding: 10px 0 var(--ns-row-gap); line-height: 1.3; }
 .ns-cols p { max-width: 42em; margin: 0; }
 
-/* Contact: flowing text with superscript numbers, then pills at the same size. */
-.ns-flow { margin: 0 var(--ns-margin); padding: 10px 0 0; font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1.2; letter-spacing: -.015em; text-wrap: pretty; }
+/* Contact: flowing text with superscript numbers, then pills. */
+.ns-flow { margin: 0 var(--ns-margin); padding: 10px 0 0; line-height: 1.3; text-wrap: pretty; }
 .ns-flow sup { margin-right: .05em; font-size: .55em; line-height: 0; vertical-align: .7em; }
-.ns-pills { display: flex; flex-wrap: wrap; gap: .3em .25em; margin: 0 var(--ns-margin); padding: .6em 0 0; list-style: none; font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.015em; }
+.ns-pills { display: flex; flex-wrap: wrap; gap: .3em .25em; margin: 0 var(--ns-margin); padding: .6em 0 0; list-style: none; line-height: 1; }
 .ns-pill { display: inline-block; padding: .12em .5em .14em; border: 1px solid currentColor; border-radius: 999px; white-space: nowrap; text-decoration: none; }
 
 @media (hover: hover) {
@@ -112,23 +118,20 @@ body:has(.ns) { background: var(--paper); }
   .ns-programmes { row-gap: var(--ns-space); }
   .ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: auto; }
   .ns-head-name { flex-basis: 33%; }
-  .ns-head-name::after { right: -2.5vw; width: 3vw; }
-  .ns-head-nav { margin-left: 2.2vw; }
-  .ns-row { grid-template-columns: 33% minmax(0, 1fr); }
+  .ns-row { grid-template-columns: calc(33% + var(--ns-space) * .66) minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
-  .ns { --ns-margin: 12px; --ns-edge: 10px; --ns-t: 15px; --ns-m: 19px; }
+  .ns { --ns-margin: 12px; --ns-t: 15px; --ns-m: 19px; }
   .ns-head { font-size: 17px; white-space: nowrap; }
-  .ns-head-name { flex: 0 0 auto; padding-right: .7em; }
-  .ns-head-name::after { right: -4.5vw; width: 4.5vw; }
-  .ns-head-nav { margin-left: 4vw; }
+  .ns-head-name { flex: 0 0 auto; }
   .ns-programmes, .ns-work, .ns-hooder, .ns-band, .ns-cols { grid-template-columns: minmax(0, 1fr); }
   .ns-work { row-gap: 24px; }
-  .ns-hooder-text { margin-right: 0; padding-bottom: 6px; }
+  .ns-hooder-text { margin-right: 0; }
+  .ns-hooder-info { margin-top: 0; }
   .ns-band h2 + h2 { display: none; }
   .ns-cols { row-gap: 14px; }
   /* The text above the images. */
   .ns-row { grid-template-columns: minmax(0, 1fr); }
-  .ns-row-text { padding: 6px var(--ns-indent) 4px; }
-  .ns-row-strip { height: 240px; }
+  .ns-row-text { padding-right: 0; }
+  .ns-row-strip { height: 220px; }
 }

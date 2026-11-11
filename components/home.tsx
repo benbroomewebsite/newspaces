@@ -41,7 +41,7 @@ export function Home({ layout = 'rows' }: { layout?: 'rows' | 'cards' }) {
 export function Header() {
   return <header className="ns-head">
     <Link className="ns-head-name" href="/">{siteName}</Link>
-    <nav className="ns-head-nav" aria-label="Sections"><a href="/#about">About</a>, <a href="/#contact">Contact</a></nav>
+    <nav className="ns-head-nav" aria-label="Sections"><a href="/#about">About</a>, <a href="/#trustees">Trustees</a>, <a href="/#contact">Contact</a></nav>
   </header>
 }
 
@@ -125,7 +125,8 @@ export function ProjectCard({ work }: { work: Work }) {
   </Link>
 }
 
-// The description and contact, in rule bands at the foot of the page.
+// About, trustees and contact, in rule bands at the foot of the page (the
+// meeting notes: "about section, mission statement, trustees, all on the main site").
 function Information() {
   const channels = [
     contact.email && { name: 'email', label: contact.email, href: `mailto:${contact.email}` },
@@ -138,6 +139,8 @@ function Information() {
       <p>{siteName}<br />{siteTagline}</p>
       <p>{placeholder.about}</p>
     </div>
+    <div className="ns-band" id="trustees"><h2>Trustees</h2></div>
+    <div className="ns-cols"><p>To be confirmed.</p></div>
     <div className="ns-band" id="contact"><h2>Contact</h2></div>
     {channels.length
       ? <>
