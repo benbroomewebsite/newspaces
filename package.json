@@ -8,6 +8,8 @@
     "predev": "node scripts/prepare-pdf-assets.mjs && node scripts/build-works.mjs",
     "prebuild": "node scripts/prepare-pdf-assets.mjs && node scripts/check-portfolio.cjs && node scripts/check-gallery-layout.cjs",
     "check": "node scripts/check-portfolio.cjs && node scripts/check-gallery-layout.cjs",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "node scripts/check-content.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start"

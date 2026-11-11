@@ -15,6 +15,13 @@ const { imageSize } = require('next/dist/compiled/image-size')
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const media = JSON.parse(readFileSync(join(root, 'lib/media-map.json'), 'utf8'))
 const DATE = /^\d{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12]\d|3[01]))?)?$/
+const categories = new Set(['Exhibition', 'Selected Writing', 'Performance', 'Talk', 'Artist Grant', 'Press'])
+const validDate = (value) => {
+  if (typeof value !== 'string' || !DATE.test(value)) return false
+  if (value.length !== 10) return true
+  const parsed = new Date(`${value}T12:00:00Z`)
+  return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === value
+}
 
 const warnings = []
 const warn = (slug, message) => warnings.push(`${slug}: ${message}`)
@@ -22,7 +29,7 @@ const warn = (slug, message) => warnings.push(`${slug}: ${message}`)
 // A path is usable when it is a web address, an object in the media bucket or a
 // file the site serves from public/.
 const inPublic = (path) => path.startsWith('/') && !path.includes('..') && existsSync(join(root, 'public', path))
-const resolves = (path) => /^https:\/\//.test(path) || Boolean(media[path]) || inPublic(path)
+const resolves = (path) => typeof path === 'string' && (/^https:\/\//.test(path) || Boolean(media[path]) || inPublic(path))
 const isWebAddress = (href) => {
   try {
     return ['http:', 'https:'].includes(new URL(href).protocol)
@@ -34,7 +41,7 @@ const isWebAddress = (href) => {
 function keepResolvable(slug, items, pathOf, kind) {
   return (items ?? []).filter((item) => {
     const path = pathOf(item)
-    if (!path || resolves(path)) return true
+    if (path && resolves(path)) return true
     warn(slug, `${kind} not found, left out: ${path}`)
     return false
   })
@@ -44,7 +51,14 @@ function keepResolvable(slug, items, pathOf, kind) {
 // gallery layout needs, so they are read from the file.
 function measure(image) {
   if (!image.upload || !inPublic(image.upload)) return image
-  const { width, height, orientation } = imageSize(readFileSync(join(root, 'public', image.upload)))
+  let dimensions
+  try {
+    dimensions = imageSize(readFileSync(join(root, 'public', image.upload)))
+  } catch {
+    warn(image.upload, 'could not read image dimensions; using gallery fallback')
+    return image
+  }
+  const { width, height, orientation } = dimensions
   // Phone photos can be stored on their side with a note to rotate them.
   const turned = orientation >= 5
   return { ...image, width: turned ? height : width, height: turned ? width : height }
@@ -52,13 +66,18 @@ function measure(image) {
 
 function collect(name) {
   const slug = name.replace(/\.json$/, '')
-  const work = { slug, ...JSON.parse(readFileSync(join(root, 'content/works', name), 'utf8')) }
-  if (work.category !== 'Press' && !DATE.test(work.date ?? '')) {
+  const work = { ...JSON.parse(readFileSync(join(root, 'content/works', name), 'utf8')), slug }
+  if (!work.title?.trim() || !categories.has(work.category)) {
+    warn(slug, 'left off the site until it has a title and a recognised category')
+    return undefined
+  }
+  if (work.category !== 'Press' && !validDate(work.date)) {
     warn(slug, `left off the site until it has a date (2025, 2025-10 or 2025-10-04), found "${work.date ?? ''}"`)
     return undefined
   }
   return {
     ...work,
+    featuredImage: work.featuredImage && resolves(work.featuredImage) ? work.featuredImage : '',
     images: keepResolvable(slug, work.images, (image) => image.upload || image.src, 'image').map(measure),
     videos: keepResolvable(slug, work.videos, (video) => video.src, 'video'),
     files: keepResolvable(slug, work.files, (file) => file.upload || file.href, 'document'),

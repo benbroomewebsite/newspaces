@@ -15,17 +15,25 @@ export async function GET(request: Request) {
   if (!originalKey || !originalKey.toLowerCase().endsWith('.pdf')) {
     return new Response('Document not found', { status: 404 })
   }
+  if (!mediaBaseUrl) {
+    return new Response('Media storage is not configured yet.', { status: 503 })
+  }
   const downloading = url.searchParams.get('download') === '1'
   const key = downloading ? originalKey : (readingMap as Record<string, string>)[source] ?? originalKey
 
   const headers = new Headers()
   const range = request.headers.get('range')
   if (range) headers.set('Range', range)
-  const upstream = await fetch(`${mediaBaseUrl}/${key.split('/').map(encodeURIComponent).join('/')}`, {
-    headers,
-    cache: 'no-store',
-    signal: request.signal,
-  })
+  let upstream: Response
+  try {
+    upstream = await fetch(`${mediaBaseUrl}/${key.split('/').map(encodeURIComponent).join('/')}`, {
+      headers,
+      cache: 'no-store',
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(15_000)]),
+    })
+  } catch {
+    return new Response('The document could not be loaded. Please try again.', { status: 502 })
+  }
   if (!upstream.ok) {
     return new Response('The document could not be loaded. Please try again.', { status: upstream.status })
   }

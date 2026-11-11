@@ -5,7 +5,7 @@
   "type": "Exhibition",
   "publication": "Community Hall, London",
   "date": "2026-03",
-  "description": "A sample project showing how an exhibition page is laid out. Replace or delete it in the editor at /keystatic.\n\nThe images below follow the same row rules as before: landscapes alternate between full width and pairs, portraits pair up, and the order is shuffled on each visit unless Saved order is chosen.",
+  "description": "An example exhibition for the New Spaces website preview.",
   "links": [],
   "files": [],
   "imageOrder": "random",

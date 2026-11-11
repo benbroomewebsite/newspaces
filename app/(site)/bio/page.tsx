@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { aboutParagraphs, contact, portrait } from '@/lib/bio'
 import { Identity } from '@/components/identity'
 
-export const metadata: Metadata = { title: 'Bio', description: aboutParagraphs.join(' '), alternates: { canonical: '/bio' }, openGraph: { title: 'New Spaces — Bio', description: aboutParagraphs.join(' '), url: '/bio' } }
+export const metadata: Metadata = { title: 'About', description: aboutParagraphs.join(' '), alternates: { canonical: '/bio' }, openGraph: { title: 'New Spaces — About', description: aboutParagraphs.join(' '), url: '/bio' } }
 
 export default function BioPage() {
   return <main className="project-page bio-shell">
@@ -21,8 +21,8 @@ export default function BioPage() {
       </article>
 
       <footer className="contact">
-        <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
-        <a href={contact.instagram} target="_blank" rel="noreferrer">↳ Instagram</a>
+        {contact.email && <><a href={`mailto:${contact.email}`}>{contact.email}</a><br /></>}
+        {contact.instagram && <a href={contact.instagram} target="_blank" rel="noreferrer">↳ Instagram</a>}
       </footer>
     </aside>
 

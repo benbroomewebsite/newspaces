@@ -14,12 +14,10 @@ const uploads = { directory: 'public/uploads/works', publicPath: '/uploads/works
 const webAddress = { regex: /^https?:\/\/\S+$/, message: 'A full address, starting https://' }
 const optionalWebAddress = { regex: /^(https?:\/\/\S+)?$/, message: webAddress.message }
 
-// Only the main branch is published. Should a save land on a new branch made in
-// the editor, it is named editor/… and .github/workflows/publish-editor-branches.yml
-// merges it into main. The workflow also supports the older Alice branch and
-// synchronises editor branches after publication to avoid stale snapshots.
+// Editor branches can be reviewed and merged through GitHub. This project does
+// not inherit the portfolio's automatic publishing workflow.
 export default config({
-  storage: github ? { kind: 'github', repo: 'OWNER/new-spaces', branchPrefix: 'editor/' } : { kind: 'local' },
+  storage: github ? { kind: 'github', repo: 'benbroomewebsite/newspaces', branchPrefix: 'editor/' } : { kind: 'local' },
   ui: { brand: { name: 'New Spaces' } },
   collections: {
     works: collection({
@@ -106,7 +104,7 @@ export default config({
       format: { data: 'json' },
       schema: {
         bio: fields.text({ label: 'Bio', description: 'Shown on the Bio page. Leave a blank line between paragraphs.', multiline: true }),
-        portrait: fields.image({ label: 'Portrait', description: 'Optional photo of Ben for the Bio page.', directory: 'public/uploads/bio', publicPath: '/uploads/bio/' }),
+        portrait: fields.image({ label: 'About image', description: 'Optional image for the About page.', directory: 'public/uploads/bio', publicPath: '/uploads/bio/' }),
         portraitAlt: fields.text({ label: 'Portrait description', defaultValue: 'New Spaces' }),
         portraitCredit: fields.text({ label: 'Photo credit' }),
         email: fields.text({ label: 'Email address' }),

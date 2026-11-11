@@ -135,7 +135,7 @@ function orderByYear(items: Work[]): Work[] {
     const undated = inYear.filter((work) => !work.sortDate).sort((a, b) => a.order - b.order)
     const queues = CATEGORY_ORDER.map((category) => undated.filter((work) => work.category === category))
     const mixed: Work[] = []
-    while (mixed.length < undated.length) {
+    while (queues.some((queue) => queue.length)) {
       for (const queue of queues) {
         const next = queue.shift()
         if (next) mixed.push(next)

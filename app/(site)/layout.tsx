@@ -1,12 +1,13 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { FontTrial } from '@/components/font-trial'
-import { siteDescription, siteName, siteUrl } from '@/lib/site'
+import { siteDescription, siteIndexable, siteName, siteUrl } from '@/lib/site'
 import { contact } from '@/lib/bio'
 import '../globals.css'
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
+  robots: { index: siteIndexable, follow: siteIndexable },
   title: { default: 'New Spaces', template: '%s — New Spaces' },
   description: siteDescription,
   alternates: { canonical: '/' },
@@ -44,11 +45,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const organizationSchema = { '@context': 'https://schema.org', '@type': 'Organization', name: 'New Spaces', url: siteUrl.toString(), email: `mailto:${contact.email}`, sameAs: [contact.instagram] }
+  const organizationSchema = { '@context': 'https://schema.org', '@type': 'Organization', name: siteName, url: siteUrl.toString(), email: contact.email || undefined, sameAs: contact.instagram ? [contact.instagram] : undefined }
   return (
     <html lang="en">
       <body className="antialiased">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema).replace(/</g, '\\u003c') }} />
         <FontTrial />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

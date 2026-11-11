@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { contact } from '@/lib/bio'
 import { carouselImages, carouselWork } from '@/lib/carousel'
 import { mediaHref } from '@/lib/media'
+import { session } from '@/lib/session'
 import { directHref } from '@/lib/project-view'
 import { useRandomOrder } from '@/lib/use-random-order'
 import { inFilter, typeIn, type Work, type WorkCategory, works } from '@/lib/works'
@@ -28,7 +29,7 @@ function slidesFor(filter: Filter): Slide[] {
     const sources = filter === 'Artist Grant' ? work.images.map((image) => image.src) : lead ? [lead] : []
     return sources.map((src) => ({ src, work }))
   })
-  return slides.length > 1 ? slides : curated
+  return slides.length ? slides : curated
 }
 
 // The index names the venue without its city ("Goldsmiths CCA, London" → "Goldsmiths CCA");
@@ -46,21 +47,21 @@ export function Portfolio() {
     // Old category URLs redirect here with an explicit filter, which takes
     // precedence over the reader's previous selection.
     const requestedFilter = new URLSearchParams(window.location.search).get('filter')
-    const savedFilter = window.sessionStorage.getItem('archive-filter')
+    const savedFilter = session.getItem('archive-filter')
     if (filters.includes(requestedFilter as Filter)) {
       setFilter(requestedFilter as Filter)
-      window.sessionStorage.setItem('archive-filter', requestedFilter!)
+      session.setItem('archive-filter', requestedFilter!)
     } else if (filters.includes(savedFilter as Filter)) setFilter(savedFilter as Filter)
     const frame = requestAnimationFrame(() => {
       if (filters.includes(requestedFilter as Filter)) return
-      if (archiveRef.current) archiveRef.current.scrollTop = Number(window.sessionStorage.getItem('archive-scroll-top') ?? 0)
-      window.scrollTo(0, Number(window.sessionStorage.getItem('archive-window-scroll') ?? 0))
+      if (archiveRef.current) archiveRef.current.scrollTop = Number(session.getItem('archive-scroll-top') ?? 0)
+      window.scrollTo(0, Number(session.getItem('archive-window-scroll') ?? 0))
     })
     // A saved position belongs to one return trip: it is dropped as soon as the
     // reader interacts again, so later visits start at the top.
     const forget = () => {
-      window.sessionStorage.removeItem('archive-scroll-top')
-      window.sessionStorage.removeItem('archive-window-scroll')
+      session.removeItem('archive-scroll-top')
+      session.removeItem('archive-window-scroll')
     }
     const events = ['pointerdown', 'wheel', 'keydown'] as const
     events.forEach((event) => window.addEventListener(event, forget, { once: true, passive: true }))
@@ -137,8 +138,8 @@ export function Portfolio() {
     if (window.matchMedia('(hover: hover) and (min-width: 801px)').matches) setHovered(work)
   }
   const savePosition = () => {
-    if (archiveRef.current) window.sessionStorage.setItem('archive-scroll-top', String(archiveRef.current.scrollTop))
-    window.sessionStorage.setItem('archive-window-scroll', String(window.scrollY))
+    if (archiveRef.current) session.setItem('archive-scroll-top', String(archiveRef.current.scrollTop))
+    session.setItem('archive-window-scroll', String(window.scrollY))
   }
 
   return <main className="site-shell portfolio-shell">
@@ -150,13 +151,14 @@ export function Portfolio() {
     <nav ref={filtersRef} className="filters" aria-label="Filter selected work">
       {filters.map((item) => <button key={item} className={filter === item ? 'active' : ''} aria-pressed={filter === item} onClick={() => {
         setFilter(item)
-        window.sessionStorage.setItem('archive-filter', item)
+        session.setItem('archive-filter', item)
       }}><span>{item}</span></button>)}
     </nav>
     <Identity className="identity-desktop" />
 
     <section ref={archiveRef} className="archive" aria-label="Selected work">
       <div className="work-list">
+        {visibleWorks.length === 0 && <p>No projects to show yet.</p>}
         {visibleWorks.map((work) => {
           const row = <>
             <span className="title" title={work.indexTitle}><span>{work.indexTitle}</span></span>
@@ -185,10 +187,9 @@ export function Portfolio() {
       </div>
 
       <footer className="contact">
-        <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
-        <a href={contact.instagram} target="_blank" rel="noreferrer">↳ Instagram</a>
-        <br />
-        <Link href="/bio">↳ Bio</Link>
+        {contact.email && <><a href={`mailto:${contact.email}`}>{contact.email}</a><br /></>}
+        {contact.instagram && <><a href={contact.instagram} target="_blank" rel="noreferrer">↳ Instagram</a><br /></>}
+        <Link href="/bio">↳ About</Link>
       </footer>
     </section>
 
@@ -205,17 +206,17 @@ function About({ filter }: { filter: Filter }) {
   const slides = useRandomOrder(sequence)
   const [slide, setSlide] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
-  const nextSlide = (slide + 1) % slides.length
+  const nextSlide = slides.length ? (slide + 1) % slides.length : 0
   const shown = slides[slide]?.work
 
   useEffect(() => {
-    if (slides.length < 2 || transitioning) return
+    if (slides.length < 2 || transitioning || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const timer = window.setTimeout(() => setTransitioning(true), 2000)
     return () => window.clearTimeout(timer)
   }, [slide, slides.length, transitioning])
 
   useEffect(() => {
-    if (!transitioning) return
+    if (!transitioning || slides.length < 2) return
     const timer = window.setTimeout(() => {
       setSlide((current) => (current + 1) % slides.length)
       setTransitioning(false)
@@ -223,9 +224,14 @@ function About({ filter }: { filter: Filter }) {
     return () => window.clearTimeout(timer)
   }, [slides.length, transitioning])
 
+  if (slides.length === 0) return <article className="about about-copy">
+    <p>New Spaces — Art in Underused Space</p>
+    <p><Link href="/bio">↳ About New Spaces</Link></p>
+  </article>
+
   return <article className="about">
     <div className="about-media">
-      <button className="carousel" aria-label="Show next image" onClick={() => setTransitioning(true)}>
+      <button className="carousel" aria-label={slides.length > 1 ? 'Show next image' : 'Project image'} disabled={slides.length < 2} onClick={() => setTransitioning(true)}>
         <Image
           key={slides[slide].src}
           className={`carousel-current${transitioning ? ' leaving' : ''}`}

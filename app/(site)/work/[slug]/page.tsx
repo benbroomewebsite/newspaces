@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { ProjectPage } from '@/components/project'
-import mediaMap from '@/lib/media-map.json'
-import { absoluteUrl, mediaBaseUrl } from '@/lib/site'
+import { mediaHref } from '@/lib/media'
+import { absoluteUrl } from '@/lib/site'
 import { getWorkByAnySlug, works } from '@/lib/works'
 
 const mediaUrl = (path: string) => {
-  const key = (mediaMap as Record<string, string>)[path]
-  return key ? `${mediaBaseUrl}/${key.split('/').map(encodeURIComponent).join('/')}` : absoluteUrl(path)
+  return absoluteUrl(mediaHref(path))
 }
 
 export function generateStaticParams() {
@@ -45,7 +44,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
     image: work.images.map((image) => mediaUrl(image.src)),
   }
   return <>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
     <ProjectPage work={work} />
   </>
 }

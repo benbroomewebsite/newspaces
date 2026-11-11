@@ -1,3 +1,19 @@
+# New Spaces
+
+This is a separate charity website adapted from Ben Broome's portfolio. Keep
+its current layout and sample projects useful for review while content and
+branding are discussed with Shelter Studio. Do not invent programme details,
+charitable registration claims, contact addresses or confirmed domains.
+
+Use `README.md` and `docs/project-audit.md` for setup and provenance. Edit
+`content/` rather than `lib/generated/`. Keep media local until the later R2
+setup on Ben's intended account; never copy portfolio credentials or assume
+its bucket/account defaults. Drafts remain non-indexable until launch.
+
+Validate code changes with `pnpm test`, `pnpm typecheck` and `pnpm build` (which
+includes content/gallery checks). Browser-check changed interactions at desktop
+and phone sizes. The GitHub workflow runs these checks once pushed.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
