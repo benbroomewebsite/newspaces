@@ -5,9 +5,10 @@
  * 1px apart, rule bands. The page is Ben's paper and the typeface Ben's
  * (--paper and --site-font in globals.css; his ?font= trial applies here too).
  *
- * One measurement, --ns-space, sets the spacing: the gap between the boxes (down
- * the page and between the description boxes), the white around and between the
- * images, and the distance from the top of a box to the top of its text.
+ * Spacing: --ns-space is the gap between the boxes (down the page and between
+ * the description boxes) and the left edge of the text in them. --ns-inset,
+ * a little less, is the white above and below the header text and around the
+ * programme images, and the distance from the top of a box to its text.
  */
 html:has(.ns), body:has(.ns) { height: auto; overflow: visible; }
 /* A scrollbar appearing or going must not change the width of the page. */
@@ -20,7 +21,8 @@ body:has(.ns) { background: var(--paper); }
   --ns-ink: #000;
   --ns-rule: rgb(0 0 0 / .55);
   --ns-margin: clamp(14px, 2.2vw, 44px);  /* the same on the left and the right */
-  --ns-space: clamp(10px, 1.116vw, 18px); /* the one spacing measurement (above) */
+  --ns-space: clamp(10px, 1.116vw, 18px); /* spacing (above) */
+  --ns-inset: calc(var(--ns-space) * .8);
   --ns-indent: var(--ns-space);
   --ns-pad: 3px;                          /* card padding */
   --ns-row-gap: clamp(32px, 3vw, 48px);
@@ -41,10 +43,10 @@ body:has(.ns) { background: var(--paper); }
 .ns a { color: inherit; }
 .ns :focus-visible { outline: 1px solid var(--ns-ink); outline-offset: 2px; }
 
-/* Header: name box, notch, section box. The text's capitals sit --ns-space
-   below the top of the page, as a programme's name sits in its box. */
+/* Header: name box, notch, section box. The same white above the capitals and
+   below the baseline, matching the space above a programme's name in its box. */
 .ns-head { position: sticky; z-index: 20; top: 0; display: flex; margin-inline: var(--ns-margin); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; }
-.ns-head > * { padding: var(--ns-space); background: var(--ns-white); text-box: trim-both cap alphabetic; }
+.ns-head > * { padding: var(--ns-inset) var(--ns-space); background: var(--ns-white); text-box: trim-both cap alphabetic; }
 .ns-head-name { position: relative; flex: 0 0 25%; }
 /* The notch: a white tab over the top of the gap, leaving a slot of the page beneath it. */
 .ns-head-name::after { content: ''; position: absolute; top: 0; right: calc(-1 * var(--ns-space) - 2px); width: calc(var(--ns-space) + 4px); height: 25%; background: var(--ns-white); }
@@ -59,17 +61,17 @@ body:has(.ns) { background: var(--paper); }
 
 /* Programmes: one wide white box each, --ns-space apart. The text sits on the
    left, in line with the name in the header; the images start in line with the
-   About box above, with --ns-space of white around and between them. */
+   section box above, with --ns-inset of white around them. */
 .ns-rows { display: flex; flex-direction: column; gap: var(--ns-space); padding: var(--ns-space) var(--ns-margin) 0; }
-.ns-row { display: grid; grid-template-columns: calc(25% + var(--ns-space) / 2) minmax(0, 1fr); align-items: start; row-gap: var(--ns-space); padding: var(--ns-space); background: var(--ns-white); }
+.ns-row { display: grid; grid-template-columns: calc(25% + (var(--ns-space) + var(--ns-inset)) / 4) minmax(0, 1fr); align-items: start; row-gap: var(--ns-inset); padding: var(--ns-inset) var(--ns-inset) var(--ns-inset) var(--ns-space); background: var(--ns-white); }
 .ns-row-text { padding-right: var(--ns-space); line-height: 1.3; }
 /* The name's capitals start level with the top of the first image. */
 .ns-row-text h2 { margin: 0 0 var(--ns-space); font-size: var(--ns-m); font-weight: var(--ns-title); line-height: 1; letter-spacing: -.01em; text-box: trim-start cap alphabetic; }
 .ns-row-text p { max-width: 32em; margin: 0 0 var(--ns-space); }
 .ns-row-text a { text-decoration: none; }
-/* Three images at one height; the last runs off the edge and they scroll
-   sideways, without a visible scrollbar. */
-.ns-row-strip { display: flex; gap: var(--ns-space); height: clamp(200px, 25vw, 400px); overflow-x: auto; scrollbar-width: none; }
+/* Three images at one height, 3px apart; the last runs off the edge and they
+   scroll sideways, without a visible scrollbar. */
+.ns-row-strip { display: flex; gap: var(--ns-pad); height: clamp(200px, 25vw, 400px); overflow-x: auto; scrollbar-width: none; }
 .ns-row-strip::-webkit-scrollbar { display: none; }
 .ns-row-image { flex: 0 0 auto; height: 100%; margin: 0; }
 .ns-row-image img { display: block; width: auto; height: 100%; }
@@ -118,7 +120,7 @@ body:has(.ns) { background: var(--paper); }
   .ns-programmes { row-gap: var(--ns-space); }
   .ns-band > :nth-child(2), .ns-cols > :nth-child(2) { grid-column: auto; }
   .ns-head-name { flex-basis: 33%; }
-  .ns-row { grid-template-columns: calc(33% + var(--ns-space) * .66) minmax(0, 1fr); }
+  .ns-row { grid-template-columns: calc(33% + (var(--ns-space) + var(--ns-inset)) * .33) minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
   .ns { --ns-margin: 12px; --ns-t: 15px; --ns-m: 19px; }

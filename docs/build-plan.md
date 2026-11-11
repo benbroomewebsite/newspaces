@@ -17,10 +17,11 @@ Project pages stay as on Ben's site.
   New Spaces supplies its own.
 - Show each programme as a wide white box: its name, text and a link on the
   left, three images to the right.
-- Use one spacing measurement throughout (`--ns-space`, about 16px at desktop
-  width). It is the gap between the boxes, down the page and between the two
-  description boxes, the white around and between the images, and the distance
-  from the top of a box to the top of its text (the header and each programme).
+- Spacing: `--ns-space` (about 16px at desktop width) is the gap between the
+  boxes, down the page and between the two description boxes. `--ns-inset` (a
+  little less, about 13px) is the white above and below the header text, from
+  the top of each programme box to its name and first image, and around the
+  images. The images are 3px apart.
 - Put About, Trustees and Contact at the foot of the page in rule bands, all at
   the body text size. The meeting notes ask for "about section, mission
   statement, trustees, all on the main site". The mission statement is left out for now.
