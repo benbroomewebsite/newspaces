@@ -15,7 +15,9 @@ Project pages stay as on Ben's site.
 - Use the portfolio's top: the name box and its notch, About and Contact, and
   a description box and contact box beneath. The text is placeholder until
   New Spaces supplies its own.
-- Show each programme as a thin white box across the page that opens into a preview.
+- Show each programme as a wide white box: its name, text and a link on the
+  left, three images to the right. Use one gap (12px) between the header
+  boxes, each programme and the About section.
 - Keep the description (About) and Contact at the foot of the page, in rule
   bands. No mission statement. Trustees get a separate page later.
 - No category lines, no project counts, no list and no filter bar (all tried and dropped).
@@ -30,41 +32,41 @@ Project pages stay as on Ben's site.
 | Triple Phase portfolio | White boxes, 1px gaps, the header box with its notch and the boxes beneath, image cards, rule bands, flowing contact text and pills, the type sizes (enlarged) | Its grey, Neue Haas, the filter pills, the local clock, paper/clip/live-site media |
 | Ben's portfolio (this repo) | His grey, MS Mincho with its arrow and quote fixes, project pages (text column + gallery), image and PDF readers, Keystatic editor, content collector and checks, noindex drafts | List index, hover preview and slideshow (removed), Selected Writing/Press/Talk categories and writing-only fields |
 
-The front page is `components/home.tsx`, `programme-row.tsx` and `home.css`,
-ported from the portfolio's `portfolio.css` and `portfolio-ui.tsx`.
+The front page is `components/home.tsx` and `home.css`, ported from the
+portfolio's `portfolio.css` and `portfolio-ui.tsx`.
 
 ## The page
 
 ```
 ┌ New Spaces ┐┌ About, Contact ─────────────────────────────────────────┐
 ├ description ───────┤ ├ tagline, Instagram │ Contact ┤
-
-┌ Artist Membership ── a line about it ─────────────────────────── + ┐
-┌ Artist Grant ─────── a line about it ─────────────────────────── + ┐
-┌ Rooms of Neighbours ─ a line about it ────────────────────────── − ┐
-│ text             │ image │ image │ image │ image →                 │
-│ ↳ Go to …        │       │       │       │                         │
-└────────────────────────────────────────────────────────────────────┘
-┌ Performance By ───── a line about it ─────────────────────────── + ┐
-
+                         12px
+┌ Artist Membership ┬ image ─┬ image ─┬ image ──→ (runs off the edge)
+│ text              │        │        │
+│ ↳ Go to …         │        │        │
+└───────────────────┴────────┴────────┘
+                         12px
+┌ Artist Grant … (and so on for each programme)
+                         12px
 ──── New Spaces ─── About ──────────────────────────────────────
 ──── Contact ───────────────────────────────────────────────────
 ```
 
-- **A programme row** shows its name and a line of text. The first press
-  opens the preview: the text on the left with "↳ Go to …", and the images to
-  the right, scrolling sideways where there are more. Pressing the name again,
-  or the link, goes to its page. Open rows stay open on return from a project.
+- **A programme box** is always open. The name's capitals start level with
+  the top of the first image. Under the name are its text and "↳ Go to …";
+  the name and the link both go to its page. There are three images at one
+  height, 3px apart inside a 3px white border. The last runs off the edge, and
+  they scroll sideways without a visible scrollbar. There are no captions.
 - **Artist Membership and Rooms of Neighbours** are single projects. Their
-  preview shows the project's images and their page is the project.
-- **Artist Grant and Performance By** have several projects. Their preview
-  shows one image per project, each linking to it, and their page
-  (`/programmes/artist-grant`, `/programmes/performance-by`) shows the
+  box shows the project's first three images and their page is the project.
+- **Artist Grant and Performance By** have several projects. Their box shows
+  one image from each of the three latest projects, each linking to it. Their
+  page (`/programmes/artist-grant`, `/programmes/performance-by`) shows all the
   projects as cards, three to a row.
+- **Tried and dropped:** opening and closing the boxes, and the sideways slide.
 - **The card version** (four tall image cards across the first screen) stays
-  at `/cards` for comparison. **Open:** Ben chooses, since the rows reveal fewer images at first.
-- **On phones** everything forms one column. The row text wraps under the
-  name, and the images scroll sideways.
+  at `/cards` for comparison. **Open:** Ben chooses.
+- **On phones** everything forms one column, with the text above the images.
 - **Font:** Ben's MS Mincho. Ben's existing `?font=arial` trial shows the same
   page in a sans-serif, which is much closer to the portfolio's Neue Haas.
   **Open:** which to keep.

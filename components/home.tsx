@@ -7,15 +7,14 @@ import { placeholder } from '@/lib/placeholder'
 import { coverOf, excerpt, type Programme, programmes } from '@/lib/programmes'
 import { siteName, siteTagline } from '@/lib/site'
 import type { Work } from '@/lib/works'
-import { ProgrammeRow, type RowImage } from '@/components/programme-row'
 import { ReturnPosition } from '@/components/return-position'
 import './home.css'
 
 // The New Spaces front page, built on Daniel's Triple Phase portfolio
 // (triple-phase.com/portfolio): name box and notch, a description box beneath,
 // white boxes on Ben's paper and rule bands for the information, set in Ben's
-// font. The programmes show as thin rows that open into a preview (/), or as
-// image cards (/cards), while the two are compared.
+// font. The programmes show as wide boxes with their text and images (/), or
+// as image cards (/cards), while the two are compared.
 
 const venueOnly = (venue: string) => venue.replace(/,\s*[^,]+$/, '')
 
@@ -28,7 +27,7 @@ export function Home({ layout = 'rows' }: { layout?: 'rows' | 'cards' }) {
 
     {layout === 'rows'
       ? <section className="ns-rows" aria-label="Programmes">
-        {programmes.map((programme) => <ProgrammeRow key={programme.id} {...rowProps(programme)} />)}
+        {programmes.map((programme, index) => <ProgrammeRow key={programme.id} programme={programme} eager={index < 2} />)}
       </section>
       : <section className="ns-programmes" aria-label="Programmes">
         {programmes.map((programme) => <ProgrammeCard key={programme.id} programme={programme} />)}
@@ -63,29 +62,43 @@ function Description() {
   </div>
 }
 
-// A preview shows a single project's own images, or one image per project
-// (each linking to it) for a programme of several.
-function rowProps(programme: Programme) {
+// A programme as one wide white box: its name, text and a link on the left,
+// three images to the right at one height, the last running off the edge
+// (they scroll sideways, without a visible bar). A single project shows its
+// own images; a programme of several shows one image from each of its latest
+// projects, linking to it. The name goes to the programme's page.
+const PREVIEW_IMAGES = 3
+type PreviewImage = { src: string; alt: string; width: number; height: number; href?: string }
+
+function ProgrammeRow({ programme, eager }: { programme: Programme; eager: boolean }) {
   const single = programme.works.length === 1 ? programme.works[0] : undefined
-  const sized = (work: Work, src: string) => {
+  const sized = (work: Work, src: string): PreviewImage => {
     const image = work.images.find((candidate) => candidate.src === src)
     return { src: mediaHref(src), alt: image?.alt || work.title, width: image?.width || 1500, height: image?.height || 1000 }
   }
-  const images: RowImage[] = single
-    ? single.images.slice(0, 8).map((image) => sized(single, image.src))
-    : programme.works.flatMap((work) => {
+  const images: PreviewImage[] = single
+    ? single.images.slice(0, PREVIEW_IMAGES).map((image) => sized(single, image.src))
+    : programme.works.slice(0, PREVIEW_IMAGES).flatMap((work) => {
       const cover = coverOf(work)
-      return cover ? [{ ...sized(work, cover), caption: work.indexTitle, href: `/work/${work.slug}` }] : []
+      return cover ? [{ ...sized(work, cover), href: `/work/${work.slug}` }] : []
     })
-  const short = programme.text || placeholder.programme
-  return {
-    id: programme.id,
-    name: programme.name,
-    href: programme.href,
-    short,
-    preview: (single && excerpt(single.description)) || short,
-    images,
-  }
+  const text = (single && excerpt(single.description)) || programme.text || placeholder.programme
+
+  return <article className="ns-row" aria-labelledby={`${programme.id}-name`}>
+    <div className="ns-row-text">
+      <h2 id={`${programme.id}-name`}><Link className="ns-row-title" href={programme.href}>{programme.name}</Link></h2>
+      <p>{text}</p>
+      <Link href={programme.href}>↳ Go to {programme.name}</Link>
+    </div>
+    <div className="ns-row-strip" role="group" aria-label={`${programme.name} images`} tabIndex={0}>
+      {images.map((image) => {
+        const picture = <Image src={image.src} alt={image.alt} width={image.width} height={image.height} loading={eager ? 'eager' : 'lazy'} />
+        return image.href
+          ? <Link key={image.src} className="ns-row-image" href={image.href}>{picture}</Link>
+          : <figure key={image.src} className="ns-row-image">{picture}</figure>
+      })}
+    </div>
+  </article>
 }
 
 function ProgrammeCard({ programme }: { programme: Programme }) {
