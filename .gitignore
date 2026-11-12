@@ -25,3 +25,6 @@ next-env.d.ts
 # a local preview and the source for the New Spaces bucket, never committed.
 /public/work/
 /public/originals/
+
+# Screenshots taken for review, not part of the site.
+/screenshots/

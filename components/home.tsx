@@ -52,12 +52,12 @@ function Description() {
     <p className="ns-hooder-text">{placeholder.description}</p>
     <div className="ns-hooder-info">
       <p>
-        {siteTagline}<br /><br />
+        {placeholder.line}<br /><br />
         {contact.instagram ? <a href={contact.instagram} target="_blank" rel="noreferrer">Instagram</a> : 'Instagram'}
       </p>
       <p>
         Contact:<br />
-        {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : 'To be confirmed'}
+        {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : placeholder.line}
       </p>
     </div>
   </div>
@@ -137,11 +137,11 @@ function Information() {
   return <section className="ns-info" aria-label="Information">
     <div className="ns-band" id="about"><h2>{siteName}</h2><h2>About</h2></div>
     <div className="ns-cols">
-      <p>{siteName}<br />{siteTagline}</p>
+      <p>{siteName}<br />{placeholder.line}</p>
       <p>{placeholder.about}</p>
     </div>
     <div className="ns-band" id="trustees"><h2>Trustees</h2></div>
-    <div className="ns-cols"><p>To be confirmed.</p></div>
+    <div className="ns-cols"><p>{placeholder.line}.</p></div>
     <div className="ns-band" id="contact"><h2>Contact</h2></div>
     {channels.length
       ? <>
@@ -153,6 +153,6 @@ function Information() {
           {channels.map((channel) => <li key={channel.name}><a className="ns-pill" href={channel.href} {...(channel.href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>{channel.label}</a></li>)}
         </ul>
       </>
-      : <p className="ns-flow">Contact details to follow.</p>}
+      : <p className="ns-flow">{placeholder.line}.</p>}
   </section>
 }
