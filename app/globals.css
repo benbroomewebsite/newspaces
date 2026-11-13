@@ -8,7 +8,9 @@
 /* Apostrophes and quotes come from a proportional serif: in the monospaced
    Mincho each sits in a full character slot, which reads as a gap ("Critic' s"). */
 @font-face { font-family: 'Site Quotes'; src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Times'), local('Georgia'); unicode-range: U+0027, U+2018-201D; }
-:root { --site-font: 'MS Mincho Web', 'MS Mincho', serif; --site-weight: 400; --site-size: 16px; }
+:root { --site-font: 'Helvetica Neue', Helvetica, Arial, sans-serif; --site-weight: 400; --site-size: 16px; }
+/* Ben's typeface: set siteFont to 'msmincho' in lib/site.ts, or add ?font=msmincho to a URL to try it. */
+:root[data-font="msmincho"] { --site-font: 'Site Quotes', 'MS Mincho Web', 'MS Mincho', serif; }
 :root[data-font="shippori"] { --site-font: 'Shippori Mincho', serif; --site-weight: 600; }
 :root[data-font="arial"] { --site-font: Arial, Helvetica, sans-serif; --site-size: 15px; }
 /* One text size throughout; spacing steps in multiples of 8px (--gap is the gutter between columns). */
@@ -16,7 +18,7 @@
 * { box-sizing: border-box; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 html, body { margin: 0; height: 100%; overflow: hidden; }
-body { background: var(--paper); color: var(--ink); font: var(--site-weight) var(--site-size)/1.3 'Site Arrows', 'Site Quotes', var(--site-font); }
+body { background: var(--paper); color: var(--ink); font: var(--site-weight) var(--site-size)/1.3 'Site Arrows', var(--site-font); }
 ::selection { background: #4a4a46; color: #fff; }
 button, a { color: inherit; font: inherit; cursor: default; -webkit-tap-highlight-color: transparent; }
 button { border: 0; }

@@ -70,12 +70,35 @@ portfolio's `portfolio.css` and `portfolio-ui.tsx`.
   page (`/programmes/artist-grant`, `/programmes/performance-by`) shows all the
   projects as cards, three to a row.
 - **Tried and dropped:** opening and closing the boxes, and the sideways slide.
-- **The card version** (four tall image cards across the first screen) stays
-  at `/cards` for comparison. **Open:** Ben chooses.
+- **Now (12 Nov 2026):** the front page is a full-screen slideshow, two photos
+  per programme, under the portfolio header (Work, About, Trustees, Contact)
+  with the description beneath the name. Rounded buttons name the programmes:
+  the one showing is black and opens its page; the project's name opens the
+  project. The programme boxes and the card version (`/cards`) are gone until
+  there is more material.
+- **Chosen (13 Nov 2026):** Ben found the slideshow "bit too boxy" and said
+  "the text is more important than the visuals", and he is happy with the
+  text-first page at `/text` (`TextHome` in `components/home.tsx`, rows in
+  `components/programme-list.tsx`). It has:
+  - a plain header with no boxes, which stays at the top while scrolling;
+  - the description at body size;
+  - the programmes as a list between rules: name and years, a large photo,
+    and the description from just past halfway;
+  - rows that open in place to show the rest of the text and three more
+    photos, each from a different project or artist. Pointing at a photo
+    names it on the outlined button, and clicking it opens that project;
+  - photos that are hidden until loaded, then briefly blurred and quickly
+    sharp, with no other motion;
+  - About, Trustees and Contact below, with the About text in line with the
+    descriptions.
+
+  It is built for a fifth programme. **Next:** move it to `/` and delete the
+  slideshow (`components/slideshow.tsx`). **Open:** whether Trustees gets its
+  own page.
 - **On phones** everything forms one column, with the text above the images.
-- **Font:** Ben's MS Mincho. Ben's existing `?font=arial` trial shows the same
-  page in a sans-serif, which is much closer to the portfolio's Neue Haas.
-  **Open:** which to keep.
+- **Font:** Helvetica Neue (Arial on Windows), at the portfolio's sizes. Ben's
+  MS Mincho is one setting away (`siteFont` in `lib/site.ts`), or try it with
+  `?font=msmincho`. **Open:** which to keep, and whether to license a web font.
 
 ## Content to carry across
 

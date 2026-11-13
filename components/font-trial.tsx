@@ -3,9 +3,10 @@
 import { useEffect } from 'react'
 import { session } from '@/lib/session'
 
-// Typeface trial: add ?font=msmincho, ?font=shippori or ?font=arial to any URL.
-// The choice is remembered for the rest of the browser session.
-const fonts = ['msmincho', 'shippori', 'arial']
+// Typeface trial: add ?font=helvetica, ?font=msmincho, ?font=shippori or
+// ?font=arial to any URL. The choice is remembered for the rest of the browser
+// session; the site's own choice is siteFont in lib/site.ts.
+const fonts = ['helvetica', 'msmincho', 'shippori', 'arial']
 
 export function FontTrial() {
   useEffect(() => {

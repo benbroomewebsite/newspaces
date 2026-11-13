@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { FontTrial } from '@/components/font-trial'
-import { siteDescription, siteIndexable, siteName, siteUrl } from '@/lib/site'
+import { siteDescription, siteFont, siteIndexable, siteName, siteUrl } from '@/lib/site'
 import { contact } from '@/lib/bio'
 import '../globals.css'
 
@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
   const organizationSchema = { '@context': 'https://schema.org', '@type': 'Organization', name: siteName, url: siteUrl.toString(), email: contact.email || undefined, sameAs: contact.instagram ? [contact.instagram] : undefined }
   return (
-    <html lang="en">
+    <html lang="en" data-font={siteFont}>
       <body className="antialiased">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema).replace(/</g, '\\u003c') }} />
         <FontTrial />
