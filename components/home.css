@@ -117,8 +117,11 @@ body:has(.ns) { background: var(--paper); }
 .ns-row-images { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding-top: var(--ns-rowpad); }
 .ns-row-images > a { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #dcdcd8; }
 /* Photographs: hidden until loaded (the first ones until all have), then
-   briefly blurred and quickly sharp, all at once; again each time a row opens. */
-.ns-row img { object-fit: cover; opacity: 0; }
+   briefly blurred and quickly sharp, all at once; again each time a row opens.
+   If the page's script never runs (say, the dev server blocked it), they
+   appear anyway after three seconds. */
+.ns-row img { object-fit: cover; opacity: 0; animation: ns-show 0s 3s forwards; }
+@keyframes ns-show { to { opacity: 1; } }
 .ns-list[data-ready] .ns-row-thumb img[data-loaded], .ns-row-images img[data-loaded] { opacity: 1; animation: ns-focus .35s both; }
 @keyframes ns-focus { 0%, 50% { filter: blur(14px); } 100% { filter: blur(0); } }
 /* About, trustees and contact: headings in the titles' weight, the about text
@@ -175,7 +178,7 @@ body:has(.ns) { background: var(--paper); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ns-show-image { transition: none; }
-  .ns-row img { animation: none !important; }
+  .ns-list[data-ready] .ns-row-thumb img[data-loaded], .ns-row-images img[data-loaded] { animation: none; }
 }
 @media (max-width: 1024px) {
   .ns-work, .ns-band, .ns-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
