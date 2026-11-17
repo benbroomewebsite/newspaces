@@ -65,5 +65,10 @@ At launch, confirm the public domain, set `NEXT_PUBLIC_SITE_URL`, and set
 `NEXT_PUBLIC_SITE_INDEXABLE=true`. Search directives do not provide access control.
 Public environment values are baked into the build, so rebuild after changes.
 
-R2 is not configured. Media currently comes from `public/`; leave
-`NEXT_PUBLIC_MEDIA_BASE_URL` empty until the new bucket is ready.
+Media lives in the `newspaces` R2 bucket on Ben's Cloudflare account
+(his Drawing a Blank login), keyed by site path. During review it is served
+from the bucket's rate-limited `r2.dev` address; move to a custom domain
+before launch. Set `NEXT_PUBLIC_MEDIA_BASE_URL` to that address on Vercel. Leave it empty locally to serve the gitignored copies in `public/`.
+To add or replace media, put the files in `public/work`, log Wrangler into that
+account (`wrangler whoami` to check), and run
+`node scripts/upload-media.mjs newspaces`; commit the updated `lib/media-map.json`.
